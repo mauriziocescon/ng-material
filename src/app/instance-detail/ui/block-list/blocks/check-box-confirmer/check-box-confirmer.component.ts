@@ -1,19 +1,19 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  input,
-  output,
-  effect,
-  untracked,
-  computed,
-  inject,
   ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+  output,
+  untracked,
 } from '@angular/core';
-import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, skip } from 'rxjs/operators';
+import { distinctUntilChanged, skip } from 'rxjs/operators';
 
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { MatCardModule } from '@angular/material/card';

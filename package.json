@@ -1,14 +1,35 @@
 {
   "name": "ng-material",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "A demo application built with angular and material",
+  "author": "Maurizio Cescon <maurizio.cescon@gmail.com>",
+  "homepage": "https://be.linkedin.com/in/mauriziocescon",
+  "private": false,
+  "engines": {
+    "node": ">=20.10.0",
+    "npm": ">=10.2.3"
+  },
   "scripts": {
+    "postinstall": "npm run build",
+    "start": "cross-env NODE_ENV=production npm run json-server",
+    "json-server": "node ./mock-server/server.js",
+    "json-server-watch": "nodemon --ext js --watch ./mock-server ./mock-server/server.js",
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "serve": "ng serve --open | npm run json-server-watch",
+    "build": "ng build --stats-json",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
-  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mauriziocescon/ngrx-app"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/brentertz/scapegoat/blob/master/LICENSE-MIT"
+    }
+  ],
   "dependencies": {
     "@angular/animations": "^18.0.0",
     "@angular/common": "^18.0.0",

@@ -1,16 +1,4 @@
-import {
-  Component,
-  input,
-  output,
-  computed,
-  ChangeDetectionStrategy,
-  TemplateRef,
-  contentChild,
-  signal,
-} from '@angular/core';
-import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
-
-import { interval } from 'rxjs';
+import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
 
 import { TranslocoPipe } from '@jsverse/transloco';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,12 +12,10 @@ import { Instance } from '../../models/instance.model';
   selector: 'app-instance-cp',
   standalone: true,
   imports: [
-    NgTemplateOutlet,
     TranslocoPipe,
     MatButtonModule,
     MatCardModule,
     ValidityStateDirective,
-    AsyncPipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -47,15 +33,7 @@ import { Instance } from '../../models/instance.model';
           {{ "COMPONENT.INSTANCE.SHOW" | transloco }}
         </button>
       </mat-card-actions>
-    </mat-card>
-
-    <input type="text" [value]="value | async" (input)="valueDidChange($event)">
-
-    <ng-container
-      [ngTemplateOutlet]="test1()"
-      [ngTemplateOutletContext]="context()">
-    </ng-container>
-  `,
+    </mat-card>`,
   styles: `
     .validity-state {
       padding-left: 15px;
@@ -73,16 +51,6 @@ export class InstanceComponent {
     const validBlocks = this.instance()?.blocks.filter(b => b.valid === true).length;
     return `(${validBlocks} / ${this.instance()?.blocks.length})`;
   });
-
-  test1 = contentChild.required<TemplateRef<any>>('test1');
-  context = signal({ example: '0', other: 5, $implicit: 'context_10' });
-
-  value = interval(1000);
-
-  valueDidChange(event: Event): void {
-    const inputEl = event.target as HTMLInputElement;
-    console.log(inputEl.value);
-  }
 
   selectInstance(): void {
     this.instanceSelected.emit();

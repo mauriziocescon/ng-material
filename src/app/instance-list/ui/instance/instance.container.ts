@@ -15,15 +15,7 @@ import { InstanceComponent } from './instance.component';
   template: `
     <app-instance-cp
       [instance]="instance()"
-      (instanceSelected)="goTo()">
-
-      <ng-template #test1 let-example="example" let-other="other">
-        <div>Test yeah!</div>
-        <div>{{ example }}</div>
-        <div>{{ other }}</div>
-      </ng-template>
-
-    </app-instance-cp>`,
+      (instanceSelected)="goTo()"/>`,
 })
 export class InstanceContainerComponent {
   router = inject(Router);

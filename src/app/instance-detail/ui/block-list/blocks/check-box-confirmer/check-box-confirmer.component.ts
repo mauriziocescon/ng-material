@@ -13,7 +13,6 @@ import {
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
-import { distinctUntilChanged, skip } from 'rxjs/operators';
 
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { MatCardModule } from '@angular/material/card';
@@ -69,7 +68,11 @@ export class CheckBoxConfirmerComponent implements OnInit, OnDestroy {
 
   private blockWatcher = effect(() => {
     this.block();
-    untracked(() => this.setupController());
+    untracked(() => {
+      this.controlSubscription?.unsubscribe();
+      this.setupController();
+      this.subscribeValueChanges();
+    });
   });
 
   ngOnInit(): void {
@@ -88,7 +91,7 @@ export class CheckBoxConfirmerComponent implements OnInit, OnDestroy {
     ];
     this.control.setValidators(validators);
     this.setDisableEnable(this.block().disabled, this.control);
-    this.control.setValue(this.block()?.value ?? false, { emitEvent: false });
+    this.control.setValue(this.block()?.value ?? false);
   }
 
   private subscribeValueChanges(): void {
@@ -96,7 +99,6 @@ export class CheckBoxConfirmerComponent implements OnInit, OnDestroy {
 
     this.controlSubscription = this.control
       .valueChanges
-      .pipe(distinctUntilChanged(), skip(1))
       .subscribe(value => {
         if (value === true) {
           this.askForConfirmation();

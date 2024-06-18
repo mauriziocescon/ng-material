@@ -1,0 +1,87 @@
+{
+  "COMPONENT": {
+    "NAVIGATION_BAR": {
+      "INSTANCES": "Istanze",
+      "NAME": "Ngrx App",
+      "SELECT_LANGUAGE": "Cambia lingua"
+    },
+    "TEXT_FILTER": {
+      "PLACEHOLDER": "Inserisci testo"
+    },
+    "INSTANCE_LIST": {
+      "LOAD_COMPLETED": "Caricamento completato",
+      "LOADING": "Caricamento...",
+      "NO_RESULT": "Vuoto",
+      "RETRY": "Riprova"
+    },
+    "INSTANCE": {
+      "SHOW": "Visualizza"
+    },
+    "INSTANCE_DETAIL": {
+    },
+    "NEXT_STEP": {
+      "HEADER": "Validazione",
+      "NEXT_STEP": "Procedi",
+      "RETRY": "Riprova",
+      "SYNC": "Aggiornato",
+      "SYNCING": "Sync..."
+    },
+    "BLOCK_LIST": {
+      "LOAD_COMPLETED": "Caricamento completato",
+      "LOADING": "Caricamento...",
+      "NO_RESULT": "Vuoto",
+      "RETRY": "Riprova"
+    },
+    "UNKNOWN": {
+      "ALERT_MSG": "Componente sconosciuto",
+      "HEADER": "Unknown"
+    },
+    "CHECK_BOX": {
+      "CHECK_BOX_DESC": "Ho visionato tutti i documenti",
+      "CHECK_BOX_LABEL": "Contratto",
+      "HEADER": "CheckBox"
+    },
+    "CHECK_BOX_CONFIRMER": {
+      "CHECK_BOX_CONFIRMER_DESC": "Ho visionato tutti i documenti",
+      "CHECK_BOX_CONFIRMER_LABEL": "Contratto",
+      "HEADER": "CheckBox Confirmer"
+    },
+    "DATE_PICKER": {
+      "DATE_PICKER_LABEL": "Seleziona data",
+      "HEADER": "DatePicker"
+    },
+    "DROPDOWN": {
+      "DROPDOWN_LABEL": "Seleziona la posizione che preferisci",
+      "HEADER": "Dropdown"
+    },
+    "TEXT_INPUT": {
+      "HEADER": "TextInput",
+      "TEXT_INPUT_LABEL": "Inserisci delle motivazioni",
+      "TEXT_INPUT_MSG_MAX_LENGTH": "La lunghezza deve essere <= {{ maxLength }}",
+      "TEXT_INPUT_MSG_MIN_LENGTH": "La lunghezza deve essere >= {{ minLength }}",
+      "TEXT_INPUT_MSG_MIN_MAX_LENGTH": "La lunghezza deve essere compresa tra {{ minLength }} e {{ maxLength }}",
+      "TEXT_INPUT_PLACEHOLDER": "Digita del testo"
+    }
+  },
+  "CONTAINER": {
+    "INSTANCE_LIST": {
+      "ALERT_BUTTON": "Ok",
+      "ALERT_TITLE": "Avviso"
+    },
+    "NEXT_STEP": {
+      "ALERT_BUTTON": "Ok",
+      "ALERT_TITLE": "Avviso",
+      "DONE": "Completato"
+    },
+    "BLOCK_LIST": {
+      "ALERT_BUTTON": "Ok",
+      "ALERT_TITLE": "Avviso"
+    },
+    "CHECK_BOX_CONFIRMER": {
+      "CONFIRMATION_MESSAGE": "Sei sicuro?",
+      "CONFIRMATION_NO_BUTTON": "No",
+      "CONFIRMATION_TITLE": "Conferma",
+      "CONFIRMATION_YES_BUTTON": "Si"
+    }
+  }
+}

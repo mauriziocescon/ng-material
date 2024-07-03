@@ -2,7 +2,7 @@
   "COMPONENT": {
     "NAVIGATION_BAR": {
       "INSTANCES": "*** Instances ***",
-      "NAME": "Ngrx App",
+      "NAME": "Ng Material",
       "SELECT_LANGUAGE": "Sprache ӓndern"
     },
     "TEXT_FILTER": {

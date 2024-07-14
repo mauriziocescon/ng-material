@@ -47,7 +47,7 @@ export class InstanceDetailStore implements OnDestroy {
   }
 
   getBlock(id: string): Signal<Block<unknown>> {
-    return computed(() => this.blocks().find(b => b.id === id) as Block<unknown>, { equal: isEqual });
+    return computed(() => this.blocks().find(b => b.id === id)!, { equal: isEqual });
   }
 
   updateBlock(data: { instanceId: string, blockId: string, value: unknown }): void {

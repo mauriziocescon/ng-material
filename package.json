@@ -44,7 +44,7 @@
     "@angular/router": "^18.1.0",
     "@jsverse/transloco": "^7.4.1",
     "@ngrx/operators": "^18.0.0",
-    "@ngrx/signals": "^18.0.0-rc.3",
+    "@ngrx/signals": "^18.0.0",
     "bootstrap-icons": "^1.11.3",
     "lodash": "^4.17.21",
     "ngx-infinite-scroll": "^18.0.0",

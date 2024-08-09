@@ -12,8 +12,8 @@ import { NavigationBarContainerComponent } from './shared/navigation-bar.contain
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <app-navigation-bar-ct></app-navigation-bar-ct>
-    <router-outlet></router-outlet>`,
+    <app-navigation-bar-ct/>
+    <router-outlet/>`,
 })
 export class AppComponent {
 }

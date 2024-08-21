@@ -1,9 +1,4 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  input,
-  computed,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
 
 import { Block, BlockType } from '../../../../shared/block.model';
@@ -29,8 +24,7 @@ import { UnknownComponent } from './unknown/unknown.component';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ng-container [ngComponentOutlet]="component()" [ngComponentOutletInputs]="inputs()"/>
-  `,
+    <ng-container [ngComponentOutlet]="component()" [ngComponentOutletInputs]="inputs()"/>`,
 })
 export class GenericBlockContainerComponent {
   instanceId = input.required<string>();

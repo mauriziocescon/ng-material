@@ -8,7 +8,7 @@ import {
   output,
   untracked,
 } from '@angular/core';
-import { FormControl, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
 
@@ -74,9 +74,7 @@ export class CheckBoxComponent implements OnDestroy {
   }
 
   private setupController(): void {
-    const validators = [
-      ...this.insertIf(this.block().required, Validators.required),
-    ];
+    const validators = [...(this.block().required ? [Validators.required] : [])];
     this.control.setValidators(validators);
     this.setDisableEnable(this.block().disabled, this.control);
     this.control.setValue(this.block()?.value ?? false, { emitEvent: false });
@@ -96,9 +94,5 @@ export class CheckBoxComponent implements OnDestroy {
     } else {
       control.enable();
     }
-  }
-
-  private insertIf(condition: boolean, element: ValidatorFn): ValidatorFn[] {
-    return condition ? [element] : [];
   }
 }

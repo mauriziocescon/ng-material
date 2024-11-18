@@ -129,17 +129,11 @@ export class TextInputComponent implements OnDestroy {
   private setupController(): void {
     const minLength = this.block().minLength ?? -1;
     const maxLength = this.block().maxLength ?? -1;
-
+    
     const validators = [
-      ...this.insertIf(this.block().required, Validators.required),
-      ...this.insertIf(
-        minLength >= 0,
-        Validators.minLength(this.block().minLength as number),
-      ),
-      ...this.insertIf(
-        maxLength >= 0,
-        Validators.maxLength(this.block().maxLength as number),
-      ),
+      ...(this.block().required ? [Validators.required] : []),
+      ...(minLength >= 0 ? [Validators.minLength(this.block().minLength as number)] : []),
+      ...(maxLength >= 0 ? [Validators.maxLength(this.block().maxLength as number)] : []),
     ];
     this.control.setValidators(validators);
     this.setDisableEnable(this.block().disabled, this.control);
@@ -160,9 +154,5 @@ export class TextInputComponent implements OnDestroy {
     } else {
       control.enable();
     }
-  }
-
-  private insertIf(condition: boolean, element: any): any[] {
-    return condition ? [element] : [];
   }
 }

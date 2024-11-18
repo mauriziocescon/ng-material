@@ -82,9 +82,7 @@ export class DropdownComponent implements OnDestroy {
   }
 
   private setupController(): void {
-    const validators = [
-      ...this.insertIf(this.block().required, Validators.required),
-    ];
+    const validators = [...(this.block().required ? [Validators.required] : [])];
     this.control.setValidators(validators);
     this.setDisableEnable(this.block().disabled, this.control);
     this.control.setValue(this.block().value ?? null, { emitEvent: false });
@@ -104,9 +102,5 @@ export class DropdownComponent implements OnDestroy {
     } else {
       control.enable();
     }
-  }
-
-  private insertIf(condition: boolean, element: any): any[] {
-    return condition ? [element] : [];
   }
 }

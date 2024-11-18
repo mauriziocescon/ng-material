@@ -1,13 +1,7 @@
 import { computed, inject, Signal } from '@angular/core';
 
 import { pipe, switchMap, tap } from 'rxjs';
-import {
-  patchState,
-  signalStore,
-  withMethods,
-  withState,
-  withHooks,
-} from '@ngrx/signals';
+import { patchState, signalStore, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
 

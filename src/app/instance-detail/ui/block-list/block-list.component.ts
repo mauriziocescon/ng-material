@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  output,
-  untracked,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, untracked } from '@angular/core';
 
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 

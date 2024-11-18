@@ -1,13 +1,4 @@
-import {
-  Component,
-  input,
-  output,
-  computed,
-  effect,
-  untracked,
-  inject,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, untracked } from '@angular/core';
 
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,7 +6,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 
 import { UIUtilitiesService } from '../../../shared/ui-utilities.service';
-import { ValidityStateDirective } from '../../../shared/validity-state.directive';
 import { ModalAlert } from '../../../shared/modal.model';
 
 @Component({
@@ -26,7 +16,6 @@ import { ModalAlert } from '../../../shared/modal.model';
     MatButtonModule,
     MatCardModule,
     MatIconModule,
-    ValidityStateDirective,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

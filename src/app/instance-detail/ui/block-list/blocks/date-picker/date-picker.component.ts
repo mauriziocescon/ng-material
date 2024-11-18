@@ -1,18 +1,16 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  input,
-  output,
-  effect,
-  untracked,
-  computed,
   ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  input,
+  OnDestroy,
+  output,
+  untracked,
 } from '@angular/core';
-import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, skip } from 'rxjs/operators';
 
 import { TranslocoPipe } from '@jsverse/transloco';
 import { MatCardModule } from '@angular/material/card';
@@ -62,7 +60,7 @@ import { DatePickerBlock } from './date-picker.model';
       </mat-card-actions>
     </mat-card>`,
 })
-export class DatePickerComponent implements OnInit, OnDestroy {
+export class DatePickerComponent implements OnDestroy {
   block = input.required<DatePickerBlock>();
   valueDidChange = output<string | undefined>();
 
@@ -75,13 +73,12 @@ export class DatePickerComponent implements OnInit, OnDestroy {
 
   private blockWatcher = effect(() => {
     this.block();
-    untracked(() => this.setupController());
+    untracked(() => {
+      this.controlSubscription?.unsubscribe();
+      this.setupController();
+      this.subscribeValueChanges();
+    });
   });
-
-  ngOnInit(): void {
-    this.setupController();
-    this.subscribeValueChanges();
-  }
 
   ngOnDestroy(): void {
     this.controlSubscription?.unsubscribe();
@@ -97,7 +94,6 @@ export class DatePickerComponent implements OnInit, OnDestroy {
 
     this.controlSubscription = this.control
       .valueChanges
-      .pipe(debounceTime(500), distinctUntilChanged(), skip(1))
       .subscribe(value => this.valueDidChange.emit(value ?? undefined));
   }
 

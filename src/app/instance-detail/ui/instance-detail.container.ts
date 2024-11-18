@@ -1,31 +1,19 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  inject,
-  signal,
-  effect,
-  untracked,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal, untracked } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { InstanceDetailStore } from '../store/instance-detail.store';
 
 import { InstanceDetailComponent } from './instance-detail.component';
-import { BlockListContainerComponent } from './block-list/block-list.container';
-import { NextStepContainerComponent } from './next-step/next-step.container';
 
 @Component({
   selector: 'app-instance-detail-ct',
   standalone: true,
   imports: [
     InstanceDetailComponent,
-    BlockListContainerComponent,
-    NextStepContainerComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <app-instance-detail-cp
-      [instanceId]="instanceId()"/>`,
+    <app-instance-detail-cp [instanceId]="instanceId()"/>`,
 })
 export class InstanceDetailContainerComponent {
   private route = inject(ActivatedRoute);

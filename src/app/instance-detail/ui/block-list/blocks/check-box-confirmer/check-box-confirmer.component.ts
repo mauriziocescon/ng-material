@@ -6,7 +6,6 @@ import {
   inject,
   input,
   OnDestroy,
-  OnInit,
   output,
   untracked,
 } from '@angular/core';
@@ -50,7 +49,7 @@ import { CheckBoxConfirmerBlock } from './check-box-confirmer.model';
       </mat-card-actions>
     </mat-card>`,
 })
-export class CheckBoxConfirmerComponent implements OnInit, OnDestroy {
+export class CheckBoxConfirmerComponent implements OnDestroy {
   private transloco = inject(TranslocoService);
   private uiUtilities = inject(UIUtilitiesService);
 
@@ -74,11 +73,6 @@ export class CheckBoxConfirmerComponent implements OnInit, OnDestroy {
       this.subscribeValueChanges();
     });
   });
-
-  ngOnInit(): void {
-    this.setupController();
-    this.subscribeValueChanges();
-  }
 
   ngOnDestroy(): void {
     this.controlSubscription?.unsubscribe();

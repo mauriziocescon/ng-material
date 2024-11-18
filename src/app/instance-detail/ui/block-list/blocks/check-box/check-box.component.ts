@@ -1,18 +1,16 @@
 import {
+  ChangeDetectionStrategy,
   Component,
-  OnInit,
-  OnDestroy,
-  input,
-  output,
   computed,
   effect,
+  input,
+  OnDestroy,
+  output,
   untracked,
-  ChangeDetectionStrategy,
 } from '@angular/core';
-import { ReactiveFormsModule, FormControl, Validators, ValidatorFn } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, skip } from 'rxjs/operators';
 
 import { TranslocoPipe } from '@jsverse/transloco';
 import { MatButtonModule } from '@angular/material/button';
@@ -51,7 +49,7 @@ import { CheckBoxBlock } from './check-box.model';
       </mat-card-actions>
     </mat-card>`,
 })
-export class CheckBoxComponent implements OnInit, OnDestroy {
+export class CheckBoxComponent implements OnDestroy {
   block = input.required<CheckBoxBlock>();
   valueDidChange = output<boolean>();
 
@@ -64,13 +62,12 @@ export class CheckBoxComponent implements OnInit, OnDestroy {
 
   private blockWatcher = effect(() => {
     this.block();
-    untracked(() => this.setupController());
+    untracked(() => {
+      this.controlSubscription?.unsubscribe();
+      this.setupController();
+      this.subscribeValueChanges();
+    });
   });
-
-  ngOnInit(): void {
-    this.setupController();
-    this.subscribeValueChanges();
-  }
 
   ngOnDestroy(): void {
     this.controlSubscription?.unsubscribe();
@@ -90,7 +87,6 @@ export class CheckBoxComponent implements OnInit, OnDestroy {
 
     this.controlSubscription = this.control
       .valueChanges
-      .pipe(debounceTime(500), distinctUntilChanged(), skip(1))
       .subscribe(value => this.valueDidChange.emit(value ?? false));
   }
 

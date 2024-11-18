@@ -15,12 +15,6 @@ import { UnknownComponent } from './unknown/unknown.component';
   standalone: true,
   imports: [
     NgComponentOutlet,
-    CheckBoxContainerComponent,
-    CheckBoxConfirmerContainerComponent,
-    DatePickerContainerComponent,
-    DropdownContainerComponent,
-    TextInputContainerComponent,
-    UnknownComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

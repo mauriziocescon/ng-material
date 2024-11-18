@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { Location } from '@angular/common';
 
 import { InstanceDetailStore } from '../../store/instance-detail.store';

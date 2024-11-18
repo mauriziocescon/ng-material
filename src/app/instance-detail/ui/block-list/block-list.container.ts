@@ -1,12 +1,4 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  OnDestroy,
-  inject,
-  input,
-  effect,
-  untracked,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, OnDestroy, untracked } from '@angular/core';
 
 import { InstanceDetailStore } from '../../store/instance-detail.store';
 

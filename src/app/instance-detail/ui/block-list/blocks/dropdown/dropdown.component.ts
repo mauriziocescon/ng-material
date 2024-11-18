@@ -1,18 +1,16 @@
 import {
+  ChangeDetectionStrategy,
   Component,
-  OnInit,
-  OnDestroy,
-  input,
-  output,
   computed,
   effect,
+  input,
+  OnDestroy,
+  output,
   untracked,
-  ChangeDetectionStrategy,
 } from '@angular/core';
-import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, skip } from 'rxjs/operators';
 
 import { TranslocoPipe } from '@jsverse/transloco';
 import { MatCardModule } from '@angular/material/card';
@@ -59,7 +57,7 @@ import { DropdownBlock } from './dropdown-block.model';
       </mat-card-actions>
     </mat-card>`,
 })
-export class DropdownComponent implements OnInit, OnDestroy {
+export class DropdownComponent implements OnDestroy {
   block = input.required<DropdownBlock>();
   valueDidChange = output<string | undefined>();
 
@@ -72,13 +70,12 @@ export class DropdownComponent implements OnInit, OnDestroy {
 
   private blockWatcher = effect(() => {
     this.block();
-    untracked(() => this.setupController());
+    untracked(() => {
+      this.controlSubscription?.unsubscribe();
+      this.setupController();
+      this.subscribeValueChanges();
+    });
   });
-
-  ngOnInit(): void {
-    this.setupController();
-    this.subscribeValueChanges();
-  }
 
   ngOnDestroy(): void {
     this.controlSubscription?.unsubscribe();
@@ -98,7 +95,6 @@ export class DropdownComponent implements OnInit, OnDestroy {
 
     this.controlSubscription = this.control
       .valueChanges
-      .pipe(debounceTime(500), distinctUntilChanged(), skip(1))
       .subscribe(value => this.valueDidChange.emit(value ?? undefined));
   }
 

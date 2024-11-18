@@ -1,9 +1,4 @@
-import {
-  Component,
-  inject,
-  input,
-  ChangeDetectionStrategy, signal, effect, untracked,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, signal, untracked } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';

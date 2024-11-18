@@ -12,7 +12,7 @@ import { AppConstantsService } from './app-constants.service';
 })
 export class LocalStorageService {
   private appConstants = inject(AppConstantsService);
-  
+
   private prefix: string;
 
   constructor() {

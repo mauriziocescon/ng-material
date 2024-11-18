@@ -86,7 +86,7 @@ export class DatePickerComponent implements OnDestroy {
 
   private setupController(): void {
     this.setDisableEnable(this.block().disabled, this.control);
-    this.control.setValue(this.block().value ?? null, { emitEvent: false });
+    this.control.setValue(this.block().value ?? null);
   }
 
   private subscribeValueChanges(): void {

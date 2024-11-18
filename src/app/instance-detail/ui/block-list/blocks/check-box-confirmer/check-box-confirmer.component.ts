@@ -122,7 +122,7 @@ export class CheckBoxConfirmerComponent implements OnDestroy {
         if (result === true) {
           this.valueDidChange.emit(true);
         } else {
-          this.control.setValue(false, { emitEvent: false });
+          this.control.setValue(false);
           this.valueDidChange.emit(false);
         }
       });

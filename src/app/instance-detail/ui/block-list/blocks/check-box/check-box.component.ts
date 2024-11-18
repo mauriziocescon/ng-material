@@ -77,7 +77,7 @@ export class CheckBoxComponent implements OnDestroy {
     const validators = [...(this.block().required ? [Validators.required] : [])];
     this.control.setValidators(validators);
     this.setDisableEnable(this.block().disabled, this.control);
-    this.control.setValue(this.block()?.value ?? false, { emitEvent: false });
+    this.control.setValue(this.block()?.value ?? false);
   }
 
   private subscribeValueChanges(): void {

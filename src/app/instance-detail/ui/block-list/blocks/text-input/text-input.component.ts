@@ -47,9 +47,11 @@ import { TextInputBlock } from './text-input.model';
       <mat-card-content>
         <mat-form-field appearance="outline" class="card-content">
           <mat-label>{{ label() | transloco }}</mat-label>
-          <input type="text"
-                 matInput [formControl]="control"
-                 placeholder="{{ 'COMPONENT.TEXT_INPUT.TEXT_INPUT_PLACEHOLDER' | transloco }}"/>
+          <input
+            type="text"
+            matInput
+            [formControl]="control"
+            placeholder="{{ 'COMPONENT.TEXT_INPUT.TEXT_INPUT_PLACEHOLDER' | transloco }}"/>
           @if (isTextInputNotEmpty()) {
             <button matSuffix mat-icon-button aria-label="Clear" (click)="resetTextInput()">
               <mat-icon>close</mat-icon>
@@ -129,7 +131,7 @@ export class TextInputComponent implements OnDestroy {
   private setupController(): void {
     const minLength = this.block().minLength ?? -1;
     const maxLength = this.block().maxLength ?? -1;
-    
+
     const validators = [
       ...(this.block().required ? [Validators.required] : []),
       ...(minLength >= 0 ? [Validators.minLength(this.block().minLength as number)] : []),
@@ -137,7 +139,7 @@ export class TextInputComponent implements OnDestroy {
     ];
     this.control.setValidators(validators);
     this.setDisableEnable(this.block().disabled, this.control);
-    this.control.setValue(this.block().value ?? null, { emitEvent: false });
+    this.control.setValue(this.block().value ?? null);
   }
 
   private subscribeValueChanges(): void {

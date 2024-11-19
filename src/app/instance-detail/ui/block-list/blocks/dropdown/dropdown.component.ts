@@ -24,7 +24,6 @@ import { DropdownBlock } from './dropdown-block.model';
 
 @Component({
   selector: 'app-dropdown-cp',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     TranslocoPipe,

@@ -24,7 +24,6 @@ import { CheckBoxConfirmerBlock } from './check-box-confirmer.model';
 
 @Component({
   selector: 'app-check-box-confirmer-cp',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     TranslocoPipe,

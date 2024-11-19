@@ -1,4 +1,4 @@
-import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 import { TranslocoPipe } from '@jsverse/transloco';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,7 +10,6 @@ import { Instance } from '../../models/instance.model';
 
 @Component({
   selector: 'app-instance-cp',
-  standalone: true,
   imports: [
     TranslocoPipe,
     MatButtonModule,
@@ -37,8 +36,7 @@ import { Instance } from '../../models/instance.model';
   styles: `
     .validity-state {
       padding-left: 15px;
-    }
-  `,
+    }`,
 })
 export class InstanceComponent {
   instance = input.required<Instance>();

@@ -11,7 +11,6 @@ import { GenericBlockContainerComponent } from './blocks/generic-block.container
 
 @Component({
   selector: 'app-block-list-cp',
-  standalone: true,
   imports: [
     TranslocoPipe,
     GenericBlockContainerComponent,
@@ -27,15 +26,14 @@ import { GenericBlockContainerComponent } from './blocks/generic-block.container
       }
       <div class="full-width-message">{{ "COMPONENT.BLOCK_LIST.LOAD_COMPLETED" | transloco }}</div>
     }
-    <div class="full-width-message" [hidden]="!isLoading()">
-      {{ "COMPONENT.BLOCK_LIST.LOADING" | transloco }}
-    </div>
-    <div class="full-width-message" [hidden]="!hasNoData()">
-      {{ "COMPONENT.BLOCK_LIST.NO_RESULT" | transloco }}
-    </div>
-    <div class="full-width-message" [hidden]="!shouldRetry()" (click)="loadList()">
-      {{ "COMPONENT.BLOCK_LIST.RETRY" | transloco }}
-    </div>
+
+    @if (isLoading()) {
+      <div class="full-width-message"> {{ "COMPONENT.BLOCK_LIST.LOADING" | transloco }}</div>
+    } @else if (hasNoData()) {
+      <div class="full-width-message"> {{ "COMPONENT.BLOCK_LIST.NO_RESULT" | transloco }}</div>
+    } @else if (shouldRetry()) {
+      <div class="full-width-message" (click)="loadList()"> {{ "COMPONENT.BLOCK_LIST.RETRY" | transloco }}</div>
+    }
     <app-scroll-to-top/>`,
   styles: `
     .generic-block {
@@ -43,8 +41,7 @@ import { GenericBlockContainerComponent } from './blocks/generic-block.container
       padding-right: var(--padding-s);
       padding-top: var(--padding-m);
       padding-bottom: var(--padding-m);
-    }
-  `,
+    }`,
 })
 export class BlockListComponent {
   private transloco = inject(TranslocoService);

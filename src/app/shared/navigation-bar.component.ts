@@ -1,4 +1,4 @@
-import { Component, inject, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 
 import { TranslocoPipe } from '@jsverse/transloco';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,7 +10,6 @@ import { AppConstantsService } from '../core/app-constants.service';
 
 @Component({
   selector: 'app-navigation-bar-cp',
-  standalone: true,
   imports: [
     TranslocoPipe,
     MatButtonModule,
@@ -49,8 +48,7 @@ import { AppConstantsService } from '../core/app-constants.service';
   styles: `
     .spacer {
       flex: 1 1 auto;
-    }
-  `,
+    }`,
 })
 export class NavigationBarComponent {
   private appConstants = inject(AppConstantsService);

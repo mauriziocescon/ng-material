@@ -23,7 +23,6 @@ import { CheckBoxBlock } from './check-box.model';
 
 @Component({
   selector: 'app-check-box-cp',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     TranslocoPipe,

@@ -14,7 +14,6 @@ import { InstanceContainerComponent } from './instance/instance.container';
 
 @Component({
   selector: 'app-instance-list-cp',
-  standalone: true,
   imports: [
     TranslocoPipe,
     InfiniteScrollDirective,
@@ -34,19 +33,17 @@ import { InstanceContainerComponent } from './instance/instance.container';
         </div>
       }
 
-      <div class="full-width-message" [hidden]="!isLoading()">
-        {{ "COMPONENT.INSTANCE_LIST.LOADING" | transloco }}
-      </div>
-      <div class="full-width-message" [hidden]="!hasNoData()">
-        {{ "COMPONENT.INSTANCE_LIST.NO_RESULT" | transloco }}
-      </div>
-      <div class="full-width-message" [hidden]="!isLoadCompleted()">
-        {{ "COMPONENT.INSTANCE_LIST.LOAD_COMPLETED" | transloco }}
-      </div>
-      <div class="full-width-message" [hidden]="!shouldRetry()" (click)="loadList()">
-        {{ "COMPONENT.INSTANCE_LIST.RETRY" | transloco }}
-      </div>
+      @if (isLoading()) {
+        <div class="full-width-message"> {{ "COMPONENT.INSTANCE_LIST.LOADING" | transloco }}</div>
+      } @else if (hasNoData()) {
+        <div class="full-width-message"> {{ "COMPONENT.INSTANCE_LIST.NO_RESULT" | transloco }}</div>
+      } @else if (isLoadCompleted()) {
+        <div class="full-width-message"> {{ "COMPONENT.INSTANCE_LIST.LOAD_COMPLETED" | transloco }}</div>
+      } @else if (shouldRetry()) {
+        <div class="full-width-message" (click)="loadList()"> {{ "COMPONENT.INSTANCE_LIST.RETRY" | transloco }}</div>
+      }
       <app-scroll-to-top/>
+
     </div>`,
   styles: `
     .instance {
@@ -54,8 +51,7 @@ import { InstanceContainerComponent } from './instance/instance.container';
       padding-right: var(--padding-s);
       padding-top: var(--padding-m);
       padding-bottom: var(--padding-m);
-    }
-  `,
+    }`,
 })
 export class InstanceListComponent {
   transloco = inject(TranslocoService);

@@ -6,20 +6,19 @@ import { InstanceDetailStore } from '../../store/instance-detail.store';
 import { NextStepComponent } from './next-step.component';
 
 @Component({
-  selector: 'app-next-step-ct',
-  standalone: true,
-  imports: [
-    NextStepComponent,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
+    selector: 'app-next-step-ct',
+    imports: [
+        NextStepComponent,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
     <app-next-step-cp
       [nextStepBtnEnabled]="instanceDetailStore.isNextStepEnable()"
       [syncing]="instanceDetailStore.isSyncingBlocks()"
       [syncError]="instanceDetailStore.syncingError()"
       (nextStep)="nextStep()"
       (resetSelections)="reset()"
-      (retrySync)="retrySync()"/>`,
+      (retrySync)="retrySync()"/>`
 })
 export class NextStepContainerComponent {
   private location = inject(Location);

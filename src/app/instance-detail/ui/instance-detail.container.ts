@@ -7,7 +7,6 @@ import { InstanceDetailComponent } from './instance-detail.component';
 
 @Component({
   selector: 'app-instance-detail-ct',
-  standalone: true,
   imports: [
     InstanceDetailComponent,
   ],

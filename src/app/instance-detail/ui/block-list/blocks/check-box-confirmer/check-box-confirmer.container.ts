@@ -9,7 +9,6 @@ import { CheckBoxConfirmerComponent } from './check-box-confirmer.component';
 
 @Component({
   selector: 'app-check-box-confirmer-ct',
-  standalone: true,
   imports: [
     CheckBoxConfirmerComponent,
   ],

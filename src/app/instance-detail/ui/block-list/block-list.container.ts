@@ -6,7 +6,6 @@ import { BlockListComponent } from './block-list.component';
 
 @Component({
   selector: 'app-block-list-ct',
-  standalone: true,
   imports: [
     BlockListComponent,
   ],

@@ -12,7 +12,6 @@ import { UnknownComponent } from './unknown/unknown.component';
 
 @Component({
   selector: 'app-generic-block-ct',
-  standalone: true,
   imports: [
     NgComponentOutlet,
   ],

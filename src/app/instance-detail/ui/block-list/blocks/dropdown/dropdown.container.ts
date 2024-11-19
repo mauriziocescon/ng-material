@@ -9,7 +9,6 @@ import { DropdownComponent } from './dropdown.component';
 
 @Component({
   selector: 'app-dropdown-ct',
-  standalone: true,
   imports: [
     DropdownComponent,
   ],

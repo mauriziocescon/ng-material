@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy, output, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
@@ -13,7 +13,6 @@ import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-text-filter-cp',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     TranslocoPipe,
@@ -28,9 +27,9 @@ import { MatInputModule } from '@angular/material/input';
       <mat-label>{{ 'COMPONENT.TEXT_FILTER.PLACEHOLDER' | transloco }}</mat-label>
       <input matInput type="text" [formControl]="searchControl">
       @if (isTextFilterNotEmpty()) {
-      <button matSuffix mat-icon-button aria-label="Clear" (click)="resetTextFilter()">
-        <mat-icon>close</mat-icon>
-      </button>
+        <button matSuffix mat-icon-button aria-label="Clear" (click)="resetTextFilter()">
+          <mat-icon>close</mat-icon>
+        </button>
       }
     </mat-form-field>`,
   styles: `
@@ -40,8 +39,7 @@ import { MatInputModule } from '@angular/material/input';
       padding-right: var(--padding-s);
       padding-top: var(--padding-m);
       padding-bottom: var(--padding-m);
-    }
-  `,
+    }`,
 })
 export class TextFilterComponent implements OnInit, OnDestroy {
   valueDidChange = output<string>();

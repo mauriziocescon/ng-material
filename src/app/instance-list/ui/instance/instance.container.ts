@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Instance } from '../../models/instance.model';
@@ -7,7 +7,6 @@ import { InstanceComponent } from './instance.component';
 
 @Component({
   selector: 'app-instance-ct',
-  standalone: true,
   imports: [
     InstanceComponent,
   ],

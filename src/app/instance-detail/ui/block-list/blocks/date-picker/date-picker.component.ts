@@ -26,7 +26,6 @@ import { DatePickerBlock } from './date-picker.model';
 
 @Component({
   selector: 'app-date-picker-cp',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     TranslocoPipe,

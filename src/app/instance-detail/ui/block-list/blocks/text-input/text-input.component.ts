@@ -25,7 +25,6 @@ import { TextInputBlock } from './text-input.model';
 
 @Component({
   selector: 'app-text-input-cp',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     TranslocoPipe,

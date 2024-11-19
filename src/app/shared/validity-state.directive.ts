@@ -1,16 +1,7 @@
-import {
-  OnInit,
-  Directive,
-  effect,
-  ElementRef,
-  inject,
-  input,
-  Renderer2,
-} from '@angular/core';
+import { Directive, effect, ElementRef, inject, input, OnInit, Renderer2 } from '@angular/core';
 
 @Directive({
   selector: '[appValidityState]',
-  standalone: true,
 })
 export class ValidityStateDirective implements OnInit {
   private el = inject(ElementRef);

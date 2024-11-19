@@ -8,7 +8,6 @@ import { NextStepContainerComponent } from './next-step/next-step.container';
 
 @Component({
   selector: 'app-instance-detail-cp',
-  standalone: true,
   imports: [
     BlockListContainerComponent,
     NextStepContainerComponent,
@@ -53,8 +52,7 @@ import { NextStepContainerComponent } from './next-step/next-step.container';
     .col-12 {
       flex: 0 0 auto;
       width: 100%;
-    }
-  `,
+    }`,
 })
 export class InstanceDetailComponent {
   private breakpointObserver = inject(BreakpointObserver);

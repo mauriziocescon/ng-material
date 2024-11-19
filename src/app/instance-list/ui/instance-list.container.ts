@@ -6,7 +6,6 @@ import { InstanceListComponent } from './instance-list.component';
 
 @Component({
   selector: 'app-instance-list-ct',
-  standalone: true,
   imports: [
     InstanceListComponent,
   ],

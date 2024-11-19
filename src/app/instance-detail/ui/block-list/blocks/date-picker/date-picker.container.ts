@@ -9,7 +9,6 @@ import { DatePickerComponent } from './date-picker.component';
 
 @Component({
   selector: 'app-date-picker-ct',
-  standalone: true,
   imports: [
     DatePickerComponent,
   ],

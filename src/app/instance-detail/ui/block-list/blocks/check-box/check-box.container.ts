@@ -9,7 +9,6 @@ import { CheckBoxComponent } from './check-box.component';
 
 @Component({
   selector: 'app-check-box-ct',
-  standalone: true,
   imports: [
     CheckBoxComponent,
   ],

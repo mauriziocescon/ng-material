@@ -5,7 +5,6 @@ import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-unknown-cp',
-  standalone: true,
   imports: [
     TranslocoPipe,
     MatCardModule,

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AppLanguageService } from '../core/app-language.service';
@@ -7,7 +7,6 @@ import { NavigationBarComponent } from './navigation-bar.component';
 
 @Component({
   selector: 'app-navigation-bar-ct',
-  standalone: true,
   imports: [
     NavigationBarComponent,
   ],

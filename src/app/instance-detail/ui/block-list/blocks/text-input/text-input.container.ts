@@ -9,7 +9,6 @@ import { TextInputComponent } from './text-input.component';
 
 @Component({
   selector: 'app-text-input-ct',
-  standalone: true,
   imports: [
     TextInputComponent,
   ],

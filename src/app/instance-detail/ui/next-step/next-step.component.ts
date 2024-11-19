@@ -10,7 +10,6 @@ import { ModalAlert } from '../../../shared/modal.model';
 
 @Component({
   selector: 'app-next-step-cp',
-  standalone: true,
   imports: [
     TranslocoPipe,
     MatButtonModule,
@@ -29,18 +28,23 @@ import { ModalAlert } from '../../../shared/modal.model';
             <button mat-raised-button color="primary" (click)="moveToNextStep()" [disabled]="!nextStepBtnEnabled()">
               {{ "COMPONENT.NEXT_STEP.NEXT_STEP" | transloco }}
             </button>
-            <div [hidden]="!isSynchronized()">
-              <mat-icon>done</mat-icon>
-              <span>{{ "COMPONENT.NEXT_STEP.SYNC" | transloco }}</span>
-            </div>
-            <div [hidden]="!isSynchronizing()">
-              <mat-icon>sync</mat-icon>
-              <span>{{ "COMPONENT.NEXT_STEP.SYNCING" | transloco }}</span>
-            </div>
-            <div [hidden]="!canRetrySync()" (click)="retrySyncronization()">
-              <mat-icon>redo</mat-icon>
-              <span>{{ "COMPONENT.NEXT_STEP.RETRY" | transloco }}</span>
-            </div>
+
+            @if (isSynchronized()) {
+              <div>
+                <mat-icon>done</mat-icon>
+                <span>{{ "COMPONENT.NEXT_STEP.SYNC" | transloco }}</span>
+              </div>
+            } @else if (isSynchronizing()) {
+              <div>
+                <mat-icon>sync</mat-icon>
+                <span>{{ "COMPONENT.NEXT_STEP.SYNCING" | transloco }}</span>
+              </div>
+            } @else if (canRetrySync()) {
+              <div (click)="retrySyncronization()">
+                <mat-icon>redo</mat-icon>
+                <span>{{ "COMPONENT.NEXT_STEP.RETRY" | transloco }}</span>
+              </div>
+            }
           </div>
         </mat-card-actions>
       </mat-card>
@@ -58,8 +62,7 @@ import { ModalAlert } from '../../../shared/modal.model';
           margin: var(--padding-s);
         }
       }
-    }
-  `,
+    }`,
 })
 export class NextStepComponent {
   private transloco = inject(TranslocoService);

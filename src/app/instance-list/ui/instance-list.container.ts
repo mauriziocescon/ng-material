@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 
 import { InstanceListStore } from '../store/instance-list.store';
 
@@ -20,26 +20,31 @@ import { InstanceListComponent } from './instance-list.component';
       (pageDidScroll)="pageDidScroll()"
       (reloadList)="reloadList()"/>`,
 })
-export class InstanceListContainerComponent implements OnInit {
+export class InstanceListContainerComponent implements OnInit, OnDestroy {
   instanceListStore = inject(InstanceListStore);
 
   ngOnInit(): void {
+    this.instanceListStore.setup();
     this.textSearchDidChange('');
   }
 
+  ngOnDestroy(): void {
+    this.instanceListStore.reset();
+  }
+
   textSearchDidChange(value: string): void {
-    this.instanceListStore.upsertParams({ textSearch: value, pageNumber: 1 });
+    this.instanceListStore.updateParams({ textSearch: value, pageNumber: 1 });
   }
 
   pageDidScroll(): void {
-    const textSearch = this.instanceListStore.params.textSearch();
-    const pageNumber = this.instanceListStore.params.pageNumber();
-    this.instanceListStore.upsertParams({ textSearch, pageNumber: pageNumber + 1 });
+    const textSearch = this.instanceListStore.textSearch();
+    const pageNumber = this.instanceListStore.pageNumber();
+    this.instanceListStore.updateParams({ textSearch, pageNumber: pageNumber + 1 });
   }
 
   reloadList(): void {
-    const textSearch = this.instanceListStore.params.textSearch();
-    const pageNumber = this.instanceListStore.params.pageNumber();
-    this.instanceListStore.upsertParams({ textSearch, pageNumber });
+    const textSearch = this.instanceListStore.textSearch();
+    const pageNumber = this.instanceListStore.pageNumber();
+    this.instanceListStore.updateParams({ textSearch, pageNumber });
   }
 }

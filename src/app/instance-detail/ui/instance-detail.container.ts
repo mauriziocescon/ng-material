@@ -1,6 +1,16 @@
-import { ChangeDetectionStrategy, Component, effect, inject, signal, untracked } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+  untracked,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+import { InstanceDetailService } from '../store/instance-detail.service';
 import { InstanceDetailStore } from '../store/instance-detail.store';
 
 import { InstanceDetailComponent } from './instance-detail.component';
@@ -11,10 +21,14 @@ import { InstanceDetailComponent } from './instance-detail.component';
     InstanceDetailComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    InstanceDetailService,
+    InstanceDetailStore,
+  ],
   template: `
     <app-instance-detail-cp [instanceId]="instanceId()"/>`,
 })
-export class InstanceDetailContainerComponent {
+export class InstanceDetailContainerComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private instanceDetailStore = inject(InstanceDetailStore);
 
@@ -23,8 +37,14 @@ export class InstanceDetailContainerComponent {
 
   syncRequiredWatcher = effect(() => {
     this.instanceDetailStore.isSyncRequired();
-    untracked(() => {
-      this.canDeactivate = !this.instanceDetailStore.isSyncRequired();
-    });
+    untracked(() => this.canDeactivate = !this.instanceDetailStore.isSyncRequired());
   });
+
+  ngOnInit(): void {
+    this.instanceDetailStore.setup();
+  }
+
+  ngOnDestroy(): void {
+    this.instanceDetailStore.reset();
+  }
 }

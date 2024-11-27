@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 
+import { InstanceListService } from '../store/instance-list.service';
 import { InstanceListStore } from '../store/instance-list.store';
 
 import { InstanceListComponent } from './instance-list.component';
@@ -10,6 +11,10 @@ import { InstanceListComponent } from './instance-list.component';
     InstanceListComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    InstanceListService,
+    InstanceListStore,
+  ],
   template: `
     <app-instance-list-cp
       [instances]="instanceListStore.instances()"

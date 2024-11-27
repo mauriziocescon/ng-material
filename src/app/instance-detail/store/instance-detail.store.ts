@@ -1,6 +1,10 @@
-import { computed, inject, Injectable, OnDestroy, signal, Signal } from '@angular/core';
+import { computed, inject, Injectable, OnDestroy, Signal } from '@angular/core';
 
-import { firstValueFrom } from 'rxjs';
+import { pipe } from 'rxjs';
+import { debounceTime, filter, switchMap, tap } from 'rxjs/operators';
+import { patchState, signalState } from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { tapResponse } from '@ngrx/operators';
 
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
@@ -9,96 +13,133 @@ import { Block } from '../../shared/block.model';
 
 import { InstanceDetailService } from './instance-detail.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+type State = {
+  loadParams: { instanceId: string | undefined };
+  loadedBlocks: Block<unknown>[];
+  loadOngoing: boolean;
+  loadError: string | undefined;
+
+  blocks: Block<unknown>[];
+  syncRequired: { instanceId: string | undefined, timestamp?: number } | undefined;
+
+  syncParams: { instanceId: string | undefined, timestamp?: number };
+  syncOngoing: boolean;
+  syncError: string | undefined;
+};
+
+@Injectable()
 export class InstanceDetailStore implements OnDestroy {
   private instanceDetail = inject(InstanceDetailService);
 
-  private loadedBlocks = signal<Block<unknown>[]>([]);
-  private loadOngoing = signal<boolean>(false);
-  private loadError = signal<string | undefined>(undefined);
+  private state = signalState<State>({
+    loadParams: { instanceId: undefined },
+    loadedBlocks: [],
+    loadOngoing: false,
+    loadError: undefined,
 
-  private blocks = signal<Block<unknown>[]>([]);
-  private syncRequired = signal<{ instanceId: string, timestamp?: number } | undefined>(undefined);
+    blocks: [],
+    syncRequired: undefined,
 
-  private syncOngoing = signal<boolean>(false);
-  private syncError = signal<string | undefined>(undefined);
+    syncParams: { instanceId: undefined },
+    syncOngoing: false,
+    syncError: undefined,
+  });
 
-  private blocksValidity = computed(() => this.blocks()?.every(block => block.valid) ?? false);
+  private blocksValidity = computed(() => this.state.blocks()?.every(block => block.valid) ?? false);
 
-  editedBlocks = computed(() => this.blocks());
-  isLoadingBlocks = computed(() => this.loadOngoing());
-  loadingError = computed(() => this.loadError());
+  editedBlocks = computed(() => this.state.blocks());
+  isLoadingBlocks = computed(() => this.state.loadOngoing());
+  loadingError = computed(() => this.state.loadError());
 
-  isSyncingBlocks = computed(() => this.syncOngoing());
-  syncingError = computed(() => this.syncError());
+  isSyncingBlocks = computed(() => this.state.syncOngoing());
+  syncingError = computed(() => this.state.syncError());
 
-  isSyncRequired = computed(() => this.syncRequired()?.timestamp !== undefined);
+  isSyncRequired = computed(() => this.state.syncRequired()?.timestamp !== undefined);
   isNextStepEnable = computed(() => this.blocksValidity() &&
-    !this.loadOngoing() && this.loadingError() === undefined &&
-    !this.syncOngoing() && this.syncError() === undefined);
+    !this.state.loadOngoing() && this.loadingError() === undefined &&
+    !this.state.syncOngoing() && this.state.syncError() === undefined);
 
-  private timer: any = undefined;
+  private loadParamsSubscription = rxMethod<{ instanceId: string | undefined }>(
+    pipe(
+      filter(({ instanceId }) => instanceId !== undefined),
+      tap(() => patchState(this.state, () => ({ loadedBlocks: [], loadOngoing: true, loadError: undefined }))),
+      switchMap(({ instanceId }) => this.instanceDetail.getBlocks(instanceId as string)
+        .pipe(
+          tapResponse({
+            next: data => patchState(this.state, state => ({ loadedBlocks: data, blocks: cloneDeep(data) })),
+            error: (err: string) => patchState(this.state, state => ({ loadError: err })),
+            finalize: () => patchState(this.state, state => ({ loadOngoing: false })),
+          }),
+        ),
+      ),
+    ),
+  );
+
+  private syncParamsSubscription = rxMethod<{ instanceId: string | undefined, timestamp?: number }>(
+    pipe(
+      filter(({ timestamp }) => timestamp !== undefined),
+      tap(() => patchState(this.state, () => ({ syncOngoing: true, syncError: undefined }))),
+      debounceTime(3000),
+      switchMap(({ instanceId }) => this.instanceDetail.syncBlocks(instanceId as string, this.state.blocks())
+        .pipe(
+          tapResponse({
+            next: data => patchState(this.state, () => ({ blocks: data, syncParams: { instanceId } })),
+            error: (err: string) => patchState(this.state, () => ({ syncError: err })),
+            finalize: () => patchState(this.state, state => ({ syncOngoing: false })),
+          }),
+        ),
+      ),
+    ),
+  );
+
+  setup(): void {
+    this.loadParamsSubscription(this.state.loadParams);
+    this.syncParamsSubscription(this.state.syncParams);
+  }
 
   ngOnDestroy(): void {
-    clearTimeout(this.timer);
-    this.reset();
+    this.loadParamsSubscription?.unsubscribe();
+    this.syncParamsSubscription?.unsubscribe();
   }
 
   getBlock(id: string): Signal<Block<unknown>> {
-    return computed(() => this.blocks().find(b => b.id === id)!, { equal: isEqual });
+    return computed(() => this.state.blocks().find(b => b.id === id) as Block<unknown>, { equal: isEqual });
+  }
+
+  loadBlocks(data: { instanceId: string }): void {
+    patchState(this.state, () => ({ loadParams: { instanceId: data.instanceId } }));
   }
 
   updateBlock(data: { instanceId: string, blockId: string, value: unknown }): void {
-    this.blocks.update(blocks => {
+    patchState(this.state, state => {
+      const blocks = [...state.blocks];
       const blockIndex = blocks.findIndex(b => b.id === data.blockId);
       if (blockIndex >= 0) {
         blocks.splice(blockIndex, 1, { ...blocks[blockIndex], value: data.value });
       }
-      return blocks;
+      return { blocks };
     });
-    this.syncBlocks({ instanceId: data.instanceId, debounceTime: 3000 });
+    this.syncBlocks(data);
   }
 
-  loadBlocks(params: { instanceId: string }): void {
-    this.loadedBlocks.set([]);
-    this.loadOngoing.set(true);
-    this.loadError.set(undefined);
-    firstValueFrom(this.instanceDetail.getBlocks(params.instanceId))
-      .then(blocks => {
-        this.loadedBlocks.set(blocks);
-        this.blocks.set(cloneDeep(blocks));
-      })
-      .catch(err => this.loadError.set(err))
-      .finally(() => this.loadOngoing.set(false));
-  }
-
-  syncBlocks(params: { instanceId: string, debounceTime?: number }): void {
-    this.syncRequired.set({ instanceId: params.instanceId, timestamp: Date.now() });
-    this.syncOngoing.set(true);
-    this.syncError.set(undefined);
-    clearTimeout(this.timer);
-    this.timer = setTimeout(() => {
-      firstValueFrom(this.instanceDetail.syncBlocks(params.instanceId, this.blocks()))
-        .then(blocks => {
-          this.syncRequired.set(undefined);
-          this.blocks.set(blocks);
-        })
-        .catch(err => this.syncError.set(err))
-        .finally(() => this.syncOngoing.set(false));
-    }, params.debounceTime ?? 0);
+  syncBlocks(data: { instanceId: string }): void {
+    patchState(this.state, () => ({ syncParams: { instanceId: data.instanceId, timestamp: Date.now() } }));
   }
 
   reset(): void {
-    this.loadedBlocks.set([]);
-    this.loadOngoing.set(false);
-    this.loadError.set(undefined);
+    patchState(this.state, () => ({
+        loadParams: { instanceId: undefined },
+        loadedBlocks: [],
+        loadOngoing: false,
+        loadError: undefined,
 
-    this.blocks.set([]);
-    this.syncRequired.set(undefined);
+        blocks: [],
+        syncRequired: undefined,
 
-    this.syncOngoing.set(false);
-    this.syncError.set(undefined);
+        syncParams: { instanceId: undefined },
+        syncOngoing: false,
+        syncError: undefined,
+      }),
+    );
   }
 }

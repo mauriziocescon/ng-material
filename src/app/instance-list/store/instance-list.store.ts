@@ -11,18 +11,16 @@ import { Instance } from '../models/instance.model';
 
 import { InstanceListService } from './instance-list.service';
 
-interface State {
+type State = {
   params: { textSearch: string | undefined, pageNumber: number };
 
   instances: Instance[];
   loading: boolean;
   error: string | undefined;
   lastPage: boolean;
-}
+};
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class InstanceListStore implements OnDestroy {
   private instanceListDataClient = inject(InstanceListService);
 

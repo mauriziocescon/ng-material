@@ -1,15 +1,13 @@
-import { computed, inject, Injectable, OnDestroy, Signal } from '@angular/core';
+import { computed, inject, Injectable, OnDestroy } from '@angular/core';
 
 import { pipe, switchMap, tap } from 'rxjs';
 import { patchState, signalState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
 
-import isEqual from 'lodash/isEqual';
+import { Instance } from '../models/instance';
 
-import { Instance } from '../models/instance.model';
-
-import { InstanceListService } from './instance-list.service';
+import { InstanceListDataClient } from './instance-list-data-client';
 
 type State = {
   params: { textSearch: string | undefined, pageNumber: number };
@@ -22,7 +20,7 @@ type State = {
 
 @Injectable()
 export class InstanceListStore implements OnDestroy {
-  private instanceListDataClient = inject(InstanceListService);
+  private instanceListDataClient = inject(InstanceListDataClient);
 
   private state = signalState<State>({
     params: { textSearch: undefined, pageNumber: 1 },
@@ -39,6 +37,12 @@ export class InstanceListStore implements OnDestroy {
   loading = computed(() => this.state.loading());
   error = computed(() => this.state.error());
   lastPage = computed(() => this.state.lastPage());
+
+  isLoadCompleted = computed<boolean>(() => this.instances()?.length > 0 && !this.loading() && this.lastPage());
+  hasNoData = computed(() => this.instances()?.length === 0 && !this.loading() && this.error() === undefined);
+  shouldRetry = computed(() => !this.loading() && this.error() !== undefined);
+
+  isInfiniteScrollDisabled = computed(() => this.loading() || this.error() !== undefined || this.lastPage());
 
   private paramsSubscription = rxMethod<{ textSearch: string | undefined, pageNumber: number }>(
     pipe(
@@ -69,10 +73,6 @@ export class InstanceListStore implements OnDestroy {
 
   ngOnDestroy(): void {
     this.paramsSubscription?.unsubscribe();
-  }
-
-  instance(id: string): Signal<Instance> {
-    return computed(() => this.state.instances()?.find(instance => instance.id === id) as Instance, { equal: isEqual });
   }
 
   updateParams(params: { textSearch: string | undefined, pageNumber: number }): void {

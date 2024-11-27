@@ -1,11 +1,11 @@
 import { Route } from '@angular/router';
 
-import { InstanceListContainerComponent } from './ui/instance-list.container';
+import { InstanceListPage } from './ui/instance-list-page';
 
 export default [
   {
     path: '',
-    component: InstanceListContainerComponent,
+    component: InstanceListPage,
     title: 'Instance List',
   },
 ] satisfies Route[];

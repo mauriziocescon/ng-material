@@ -1,15 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { TranslocoPipe } from '@jsverse/transloco';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
-import { ValidityStateDirective } from '../../../shared/validity-state.directive';
+import { ValidityStateDirective } from '../../shared/validity-state.directive';
 
-import { Instance } from '../../models/instance.model';
+import { Instance } from '../models/instance';
 
 @Component({
-  selector: 'app-instance-cp',
+  selector: 'app-instance-card',
   imports: [
     TranslocoPipe,
     MatButtonModule,
@@ -38,9 +39,10 @@ import { Instance } from '../../models/instance.model';
       padding-left: 15px;
     }`,
 })
-export class InstanceComponent {
+export class InstanceCard {
+  router = inject(Router);
+
   instance = input.required<Instance>();
-  instanceSelected = output<void>();
 
   title = computed(() => this.instance()?.id);
   bodyText = computed(() => this.instance()?.description);
@@ -51,6 +53,6 @@ export class InstanceComponent {
   });
 
   selectInstance(): void {
-    this.instanceSelected.emit();
+    this.router.navigateByUrl(`/instance-detail/${this.instance().id}`);
   }
 }

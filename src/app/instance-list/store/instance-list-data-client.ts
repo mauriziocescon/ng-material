@@ -6,10 +6,10 @@ import { catchError, map } from 'rxjs/operators';
 
 import { AppConstantsService } from '../../core/app-constants.service';
 
-import { Instance } from '../models/instance.model';
+import { Instance } from '../models/instance';
 
 @Injectable()
-export class InstanceListService {
+export class InstanceListDataClient {
   private http = inject(HttpClient);
   private appConstants = inject(AppConstantsService);
 

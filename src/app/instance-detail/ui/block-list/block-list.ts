@@ -1,16 +1,26 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, untracked } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  OnDestroy,
+  untracked,
+} from '@angular/core';
 
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { ScrollToTopComponent } from '../../../shared/scroll-to-top.component';
-import { Block } from '../../../shared/block.model';
 import { ModalAlert } from '../../../shared/modal.model';
 import { UIUtilitiesService } from '../../../shared/ui-utilities.service';
+
+import { InstanceDetailStore } from '../../store/instance-detail.store';
 
 import { GenericBlockContainerComponent } from './blocks/generic-block.container';
 
 @Component({
-  selector: 'app-block-list-cp',
+  selector: 'app-block-list',
   imports: [
     TranslocoPipe,
     GenericBlockContainerComponent,
@@ -32,7 +42,7 @@ import { GenericBlockContainerComponent } from './blocks/generic-block.container
     } @else if (hasNoData()) {
       <div class="full-width-message"> {{ "COMPONENT.BLOCK_LIST.NO_RESULT" | transloco }}</div>
     } @else if (shouldRetry()) {
-      <div class="full-width-message" (click)="loadList()"> {{ "COMPONENT.BLOCK_LIST.RETRY" | transloco }}</div>
+      <div class="full-width-message" (click)="reloadList()"> {{ "COMPONENT.BLOCK_LIST.RETRY" | transloco }}</div>
     }
     <app-scroll-to-top/>`,
   styles: `
@@ -43,31 +53,45 @@ import { GenericBlockContainerComponent } from './blocks/generic-block.container
       padding-bottom: var(--padding-m);
     }`,
 })
-export class BlockListComponent {
-  private transloco = inject(TranslocoService);
-  private uiUtilities = inject(UIUtilitiesService);
+export class BlockList implements OnDestroy {
+  private readonly transloco = inject(TranslocoService);
+  private readonly uiUtilities = inject(UIUtilitiesService);
+  protected readonly instanceDetailStore = inject(InstanceDetailStore);
 
-  instanceId = input.required<string>();
-  blocks = input.required<Block<unknown>[]>();
-  loading = input.required<boolean>();
-  error = input.required<string | undefined>();
-  reloadList = output<void>();
+  readonly instanceId = input.required<string>();
 
-  isLoading = computed(() => this.loading() === true);
-  shouldRetry = computed(() => this.error() !== undefined ? this.isLoading() === false : false);
-  hasNoData = computed(() => this.blocks()?.length === 0 ? this.isLoading() === false && this.shouldRetry() === false : false);
-  showData = computed(() => this.isLoading() === false && this.hasNoData() === false && this.shouldRetry() === false);
+  protected readonly blocks = computed(() => this.instanceDetailStore.editedBlocks());
+  protected readonly isLoading = computed(() => this.instanceDetailStore.isLoadingBlocks() === true);
+  protected readonly error = computed(() => this.instanceDetailStore.loadingError());
 
-  private errorWatcher = effect(() => {
+  protected readonly shouldRetry = computed(() => this.error() !== undefined ? this.isLoading() === false : false);
+  protected readonly hasNoData = computed(() => this.blocks()?.length === 0 ? this.isLoading() === false && this.shouldRetry() === false : false);
+  protected readonly showData = computed(() => this.isLoading() === false && this.hasNoData() === false && this.shouldRetry() === false);
+
+  private instanceIdWatcher = effect(() => {
+    this.instanceId();
+    untracked(() => {
+      if (this.instanceId()) {
+        this.reloadList();
+      }
+    });
+  });
+
+
+  private readonly errorWatcher = effect(() => {
     this.error();
     untracked(() => this.showModalError());
   });
 
-  loadList(): void {
-    this.reloadList.emit();
+  ngOnDestroy() {
+    this.instanceDetailStore.reset();
   }
 
-  private showModalError(): void {
+  reloadList() {
+    this.instanceDetailStore.loadBlocks({ instanceId: this.instanceId() });
+  }
+
+  private showModalError() {
     if (this.error()) {
       const modalAlert: ModalAlert = {
         id: 'blockListError',

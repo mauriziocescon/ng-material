@@ -1,25 +1,44 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input, signal, untracked } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+  untracked,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
 
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 
-import { BlockListContainerComponent } from './block-list/block-list.container';
-import { NextStepComponent } from './next-step/next-step.component';
+import { map } from 'rxjs/operators';
+
+import { InstanceDetailService } from '../store/instance-detail.service';
+import { InstanceDetailStore } from '../store/instance-detail.store';
+
+import { BlockList } from './block-list/block-list';
+import { NextStep } from './next-step/next-step';
 
 @Component({
-  selector: 'app-instance-detail-cp',
+  selector: 'app-instance-detail',
   imports: [
-    BlockListContainerComponent,
-    NextStepComponent,
+    BlockList,
+    NextStep,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    InstanceDetailService,
+    InstanceDetailStore,
+  ],
   template: `
     <div class="instance-detail">
       <div [class]="nextStep()">
         <app-next-step [instanceId]="instanceId()"/>
       </div>
       <div [class]="blockList()">
-        <app-block-list-ct [instanceId]="instanceId()"/>
+        <app-block-list [instanceId]="instanceId()"/>
       </div>
     </div>`,
   styles: `
@@ -54,21 +73,26 @@ import { NextStepComponent } from './next-step/next-step.component';
       width: 100%;
     }`,
 })
-export class InstanceDetailComponent {
+export class InstanceDetail implements OnInit, OnDestroy {
+  private route = inject(ActivatedRoute);
   private breakpointObserver = inject(BreakpointObserver);
+  private instanceDetailStore = inject(InstanceDetailStore);
 
-  instanceId = input.required<string>();
+  private readonly paramId$ = this.route.paramMap.pipe(map(params => params.get('id') as string));
+  protected readonly instanceId = toSignal(this.paramId$, { initialValue: '' });
 
-  nextStep = signal<string>('');
-  blockList = signal<string>('');
-  breakPoints = toSignal(this.breakpointObserver.observe([
+  canDeactivate = true;
+
+  protected readonly nextStep = signal('');
+  protected readonly blockList = signal('');
+  protected readonly breakPoints = toSignal(this.breakpointObserver.observe([
     Breakpoints.XLarge,
     Breakpoints.Large,
     Breakpoints.Small,
     Breakpoints.XSmall,
   ]), { initialValue: { matches: false, breakpoints: {} } as BreakpointState });
 
-  breakpointWatcher = effect(() => {
+  private readonly breakpointWatcher = effect(() => {
     this.breakPoints();
     untracked(() => {
       const state = this.breakPoints();
@@ -90,4 +114,17 @@ export class InstanceDetailComponent {
       }
     });
   });
+
+  private readonly syncRequiredWatcher = effect(() => {
+    this.instanceDetailStore.isSyncRequired();
+    untracked(() => this.canDeactivate = !this.instanceDetailStore.isSyncRequired());
+  });
+
+  ngOnInit() {
+    this.instanceDetailStore.setup();
+  }
+
+  ngOnDestroy() {
+    this.instanceDetailStore.reset();
+  }
 }

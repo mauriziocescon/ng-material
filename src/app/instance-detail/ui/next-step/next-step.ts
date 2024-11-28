@@ -47,7 +47,7 @@ import { InstanceDetailStore } from '../../store/instance-detail.store';
                 <span>{{ "COMPONENT.NEXT_STEP.SYNCING" | transloco }}</span>
               </div>
             } @else if (canRetrySync()) {
-              <div (click)="retrySyncronization()">
+              <div (click)="retrySynchronization()">
                 <mat-icon>redo</mat-icon>
                 <span>{{ "COMPONENT.NEXT_STEP.RETRY" | transloco }}</span>
               </div>
@@ -71,11 +71,11 @@ import { InstanceDetailStore } from '../../store/instance-detail.store';
       }
     }`,
 })
-export class NextStepComponent {
+export class NextStep {
   private readonly location = inject(Location);
   private readonly transloco = inject(TranslocoService);
   private readonly uiUtilities = inject(UIUtilitiesService);
-  readonly instanceDetailStore = inject(InstanceDetailStore);
+  protected readonly instanceDetailStore = inject(InstanceDetailStore);
 
   readonly instanceId = input.required<string>();
 
@@ -97,7 +97,7 @@ export class NextStepComponent {
     this.location.back();
   }
 
-  retrySyncronization() {
+  retrySynchronization() {
     this.instanceDetailStore.syncBlocks({ instanceId: this.instanceId() });
   }
 

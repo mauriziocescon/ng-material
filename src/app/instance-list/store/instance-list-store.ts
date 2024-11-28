@@ -20,9 +20,9 @@ type State = {
 
 @Injectable()
 export class InstanceListStore implements OnDestroy {
-  private instanceListDataClient = inject(InstanceListDataClient);
+  private readonly instanceListDataClient = inject(InstanceListDataClient);
 
-  private state = signalState<State>({
+  private readonly state = signalState<State>({
     params: { textSearch: undefined, pageNumber: 1 },
 
     instances: [],
@@ -31,20 +31,20 @@ export class InstanceListStore implements OnDestroy {
     lastPage: false,
   });
 
-  textSearch = computed(() => this.state.params.textSearch());
-  pageNumber = computed(() => this.state.params.pageNumber());
-  instances = computed(() => this.state.instances());
-  loading = computed(() => this.state.loading());
-  error = computed(() => this.state.error());
-  lastPage = computed(() => this.state.lastPage());
+  readonly textSearch = computed(() => this.state.params.textSearch());
+  readonly pageNumber = computed(() => this.state.params.pageNumber());
+  readonly instances = computed(() => this.state.instances());
+  readonly loading = computed(() => this.state.loading());
+  readonly error = computed(() => this.state.error());
+  readonly lastPage = computed(() => this.state.lastPage());
 
-  isLoadCompleted = computed<boolean>(() => this.instances()?.length > 0 && !this.loading() && this.lastPage());
-  hasNoData = computed(() => this.instances()?.length === 0 && !this.loading() && this.error() === undefined);
-  shouldRetry = computed(() => !this.loading() && this.error() !== undefined);
+  readonly isLoadCompleted = computed<boolean>(() => this.instances()?.length > 0 && !this.loading() && this.lastPage());
+  readonly hasNoData = computed(() => this.instances()?.length === 0 && !this.loading() && this.error() === undefined);
+  readonly shouldRetry = computed(() => !this.loading() && this.error() !== undefined);
 
-  isInfiniteScrollDisabled = computed(() => this.loading() || this.error() !== undefined || this.lastPage());
+  readonly isInfiniteScrollDisabled = computed(() => this.loading() || this.error() !== undefined || this.lastPage());
 
-  private paramsSubscription = rxMethod<{ textSearch: string | undefined, pageNumber: number }>(
+  private readonly loadInstances = rxMethod<{ textSearch: string | undefined, pageNumber: number }>(
     pipe(
       tap(({ pageNumber }) => {
         if (pageNumber === 1) {
@@ -67,19 +67,20 @@ export class InstanceListStore implements OnDestroy {
     ),
   );
 
-  setup(): void {
-    this.paramsSubscription(this.state.params);
+  setup() {
+    this.loadInstances(this.state.params);
   }
 
-  ngOnDestroy(): void {
-    this.paramsSubscription?.unsubscribe();
+  ngOnDestroy() {
+    this.loadInstances?.unsubscribe();
+    this.reset();
   }
 
-  updateParams(params: { textSearch: string | undefined, pageNumber: number }): void {
+  updateParams(params: { textSearch: string | undefined, pageNumber: number }) {
     patchState(this.state, () => ({ params: { ...params } }));
   }
 
-  reset(): void {
+  private reset() {
     patchState(this.state, () => ({
         params: { textSearch: undefined, pageNumber: 1 },
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy, OnInit, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, OnInit, untracked } from '@angular/core';
 
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
@@ -61,12 +61,12 @@ import { InstanceCard } from './instance-card';
       padding-bottom: var(--padding-m);
     }`,
 })
-export class InstanceListPage implements OnInit, OnDestroy {
-  transloco = inject(TranslocoService);
-  uiUtilities = inject(UIUtilitiesService);
-  instanceListStore = inject(InstanceListStore);
+export class InstanceListPage implements OnInit {
+  readonly transloco = inject(TranslocoService);
+  readonly uiUtilities = inject(UIUtilitiesService);
+  readonly instanceListStore = inject(InstanceListStore);
 
-  errorWatcher = effect(() => {
+  private readonly errorWatcher = effect(() => {
     this.instanceListStore.error();
     untracked(() => {
       if (this.instanceListStore.error()) {
@@ -81,26 +81,22 @@ export class InstanceListPage implements OnInit, OnDestroy {
     });
   });
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.instanceListStore.setup();
     this.textSearchDidChange('');
   }
 
-  ngOnDestroy(): void {
-    this.instanceListStore.reset();
-  }
-
-  pageDidScroll(): void {
+  pageDidScroll() {
     const textSearch = this.instanceListStore.textSearch();
     const pageNumber = this.instanceListStore.pageNumber();
     this.instanceListStore.updateParams({ textSearch, pageNumber: pageNumber + 1 });
   }
 
-  textSearchDidChange(value: string): void {
+  textSearchDidChange(value: string) {
     this.instanceListStore.updateParams({ textSearch: value, pageNumber: 1 });
   }
 
-  loadList(): void {
+  loadList() {
     const textSearch = this.instanceListStore.textSearch();
     const pageNumber = this.instanceListStore.pageNumber();
     this.instanceListStore.updateParams({ textSearch, pageNumber });

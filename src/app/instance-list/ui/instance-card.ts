@@ -40,19 +40,19 @@ import { Instance } from '../models/instance';
     }`,
 })
 export class InstanceCard {
-  router = inject(Router);
+  readonly router = inject(Router);
 
-  instance = input.required<Instance>();
+  readonly instance = input.required<Instance>();
 
-  title = computed(() => this.instance()?.id);
-  bodyText = computed(() => this.instance()?.description);
-  validityState = computed(() => this.instance()?.blocks.every(i => i.valid === true));
-  blocksCounter = computed(() => {
+  protected readonly title = computed(() => this.instance()?.id);
+  protected readonly bodyText = computed(() => this.instance()?.description);
+  protected readonly validityState = computed(() => this.instance()?.blocks.every(i => i.valid === true));
+  protected readonly blocksCounter = computed(() => {
     const validBlocks = this.instance()?.blocks.filter(b => b.valid === true).length;
     return `(${validBlocks} / ${this.instance()?.blocks.length})`;
   });
 
-  selectInstance(): void {
+  selectInstance() {
     this.router.navigateByUrl(`/instance-detail/${this.instance().id}`);
   }
 }

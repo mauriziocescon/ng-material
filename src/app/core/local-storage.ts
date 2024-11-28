@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 
-import { AppConstantsService } from './app-constants.service';
+import { AppConstants } from './app-constants';
 
 /**
  * Manage data in
@@ -10,14 +10,10 @@ import { AppConstantsService } from './app-constants.service';
 @Injectable({
   providedIn: 'root',
 })
-export class LocalStorageService {
-  private appConstants = inject(AppConstantsService);
+export class LocalStorage {
+  private readonly appConstants = inject(AppConstants);
 
-  private prefix: string;
-
-  constructor() {
-    this.prefix = this.appConstants.Application.APP_NAME;
-  }
+  private readonly prefix = this.appConstants.Application.APP_NAME;
 
   getData<T>(key: string): T | undefined {
     try {
@@ -29,7 +25,7 @@ export class LocalStorageService {
     }
   }
 
-  setData(key: string, data: any): void {
+  setData(key: string, data: any) {
     try {
       if (data === undefined) {
         localStorage.removeItem(`${this.prefix}_${key}`);
@@ -42,7 +38,7 @@ export class LocalStorageService {
     }
   }
 
-  removeData(key: string): void {
+  removeData(key: string) {
     try {
       localStorage.removeItem(this.prefix + '_' + key.toString());
     } catch (e: any) {
@@ -50,7 +46,7 @@ export class LocalStorageService {
     }
   }
 
-  removeAllData(): void {
+  removeAllData() {
     try {
       for (const key in localStorage) {
         if (key.startsWith(`${this.prefix}_`)) {

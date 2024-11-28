@@ -4,14 +4,14 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { AppConstantsService } from '../../core/app-constants.service';
+import { AppConstants } from '../../core/app-constants';
 
 import { Block } from '../../shared/block.model';
 
 @Injectable()
 export class InstanceDetailDataClient {
   private http = inject(HttpClient);
-  private appConstants = inject(AppConstantsService);
+  private appConstants = inject(AppConstants);
 
   getBlocks(instanceId: string): Observable<Block<unknown>[]> {
     const options = { params: { instanceId } };

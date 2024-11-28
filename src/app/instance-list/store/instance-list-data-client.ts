@@ -4,14 +4,14 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { AppConstantsService } from '../../core/app-constants.service';
+import { AppConstants } from '../../core/app-constants';
 
 import { Instance } from '../models/instance';
 
 @Injectable()
 export class InstanceListDataClient {
   private readonly http = inject(HttpClient);
-  private readonly appConstants = inject(AppConstantsService);
+  private readonly appConstants = inject(AppConstants);
 
   getInstances(textSearch: string | undefined, page: number) {
     const url = this.appConstants.Api.instances;

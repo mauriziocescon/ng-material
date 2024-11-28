@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AppLanguageService } from '../core/app-language.service';
+import { AppLanguage } from '../core/app-language';
 
 import { NavigationBarComponent } from './navigation-bar.component';
 
@@ -20,7 +20,7 @@ import { NavigationBarComponent } from './navigation-bar.component';
 })
 export class NavigationBarContainerComponent {
   private router = inject(Router);
-  private appLanguage = inject(AppLanguageService);
+  private appLanguage = inject(AppLanguage);
 
   languages = this.appLanguage.getSupportedLanguagesList();
   language = signal<string>(this.appLanguage.getLanguageId());

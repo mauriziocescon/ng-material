@@ -68,7 +68,7 @@ export class BlockList implements OnDestroy {
   protected readonly hasNoData = computed(() => this.blocks()?.length === 0 ? this.isLoading() === false && this.shouldRetry() === false : false);
   protected readonly showData = computed(() => this.isLoading() === false && this.hasNoData() === false && this.shouldRetry() === false);
 
-  private instanceIdWatcher = effect(() => {
+  private readonly instanceIdWatcher = effect(() => {
     this.instanceId();
     untracked(() => {
       if (this.instanceId()) {
@@ -76,7 +76,6 @@ export class BlockList implements OnDestroy {
       }
     });
   });
-
 
   private readonly errorWatcher = effect(() => {
     this.error();

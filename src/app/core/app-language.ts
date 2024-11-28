@@ -6,16 +6,16 @@ import localeIt from '@angular/common/locales/it';
 
 import { TranslocoService } from '@jsverse/transloco';
 
-import { AppConstantsService } from './app-constants.service';
-import { LocalStorageService } from './local-storage.service';
+import { AppConstants } from './app-constants';
+import { LocalStorage } from './local-storage';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AppLanguageService {
-  private transloco = inject(TranslocoService);
-  private appConstants = inject(AppConstantsService);
-  private localStorage = inject(LocalStorageService);
+export class AppLanguage {
+  private readonly transloco = inject(TranslocoService);
+  private readonly appConstants = inject(AppConstants);
+  private readonly localStorage = inject(LocalStorage);
 
   private selectedLanguageId: string;
 
@@ -28,11 +28,11 @@ export class AppLanguageService {
     this.transloco.setActiveLang(this.getLanguageId());
   }
 
-  getLanguageId(): string {
+  getLanguageId() {
     return this.selectedLanguageId;
   }
 
-  setLanguageId(languageId: string): void {
+  setLanguageId(languageId: string) {
     if (languageId !== undefined &&
       languageId !== this.selectedLanguageId &&
       this.appConstants.Languages.SUPPORTED_LANG.indexOf(languageId) !== -1) {
@@ -41,15 +41,15 @@ export class AppLanguageService {
     }
   }
 
-  getSupportedLanguagesList(): string[] {
+  getSupportedLanguagesList() {
     return this.appConstants.Languages.SUPPORTED_LANG;
   }
 
-  private getDefaultLanguageId(): string {
+  private getDefaultLanguageId() {
     return this.appConstants.Languages.DEFAULT_LANGUAGE;
   }
 
-  private setup(): void {
+  private setup() {
     const localStorageLang = this.localStorage.getData<string>(this.appConstants.LocalStorageKey.LANGUAGE_ID);
     const browserLang = this.getBrowserLang();
     const defaultLang = this.getDefaultLanguageId();
@@ -64,7 +64,7 @@ export class AppLanguageService {
     }
   }
 
-  private getBrowserLang(): string {
+  private getBrowserLang() {
     let lang: string = navigator.language;
 
     if (lang.length > 0) {
@@ -78,7 +78,7 @@ export class AppLanguageService {
     return lang;
   }
 
-  private registerLocale(): void {
+  private registerLocale() {
     switch (this.selectedLanguageId) {
       case this.appConstants.Languages.DE: {
         registerLocaleData(localeDe);

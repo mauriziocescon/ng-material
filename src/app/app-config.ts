@@ -11,10 +11,10 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 
 import { provideTransloco } from '@jsverse/transloco';
 
-import { AppLanguageService } from './core/app-language.service';
-import { TranslocoHttpLoader } from './core/transloco-loader.service';
+import { AppLanguage } from './core/app-language';
+import { TranslocoHttpLoader } from './core/transloco-loader';
 
-import { routes } from './app.routes';
+import { routes } from './app-routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,7 +30,7 @@ export const appConfig: ApplicationConfig = {
     }),
     {
       provide: LOCALE_ID,
-      useFactory: () => inject(AppLanguageService).getLanguageId(),
+      useFactory: () => inject(AppLanguage).getLanguageId(),
     },
   ],
 };

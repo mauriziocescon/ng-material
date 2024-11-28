@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
-import { AppConstantsService } from '../core/app-constants.service';
+import { AppConstants } from '../core/app-constants';
 
 @Component({
   selector: 'app-navigation-bar-cp',
@@ -51,7 +51,7 @@ import { AppConstantsService } from '../core/app-constants.service';
     }`,
 })
 export class NavigationBarComponent {
-  private appConstants = inject(AppConstantsService);
+  private appConstants = inject(AppConstants);
 
   languages = input.required<string[]>();
   selectedLanguageId = input.required<string>();

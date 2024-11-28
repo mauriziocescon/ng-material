@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, OnDestroy, Signal } from '@angular/core';
+import { computed, inject, Injectable, OnDestroy } from '@angular/core';
 
 import { pipe } from 'rxjs';
 import { debounceTime, filter, switchMap, tap } from 'rxjs/operators';
@@ -29,9 +29,9 @@ type State = {
 
 @Injectable()
 export class InstanceDetailStore implements OnDestroy {
-  private instanceDetail = inject(InstanceDetailDataClient);
+  private readonly instanceDetail = inject(InstanceDetailDataClient);
 
-  private state = signalState<State>({
+  private readonly state = signalState<State>({
     loadParams: { instanceId: undefined },
     loadedBlocks: [],
     loadOngoing: false,
@@ -45,21 +45,21 @@ export class InstanceDetailStore implements OnDestroy {
     syncError: undefined,
   });
 
-  private blocksValidity = computed(() => this.state.blocks()?.every(block => block.valid) ?? false);
+  private readonly blocksValidity = computed(() => this.state.blocks()?.every(block => block.valid) ?? false);
 
-  editedBlocks = computed(() => this.state.blocks());
-  isLoadingBlocks = computed(() => this.state.loadOngoing());
-  loadingError = computed(() => this.state.loadError());
+  readonly editedBlocks = computed(() => this.state.blocks());
+  readonly isLoadingBlocks = computed(() => this.state.loadOngoing());
+  readonly loadingError = computed(() => this.state.loadError());
 
-  isSyncingBlocks = computed(() => this.state.syncOngoing());
-  syncingError = computed(() => this.state.syncError());
+  readonly isSyncingBlocks = computed(() => this.state.syncOngoing());
+  readonly syncingError = computed(() => this.state.syncError());
 
-  isSyncRequired = computed(() => this.state.syncRequired()?.timestamp !== undefined);
-  isNextStepEnable = computed(() => this.blocksValidity() &&
+  readonly isSyncRequired = computed(() => this.state.syncRequired()?.timestamp !== undefined);
+  readonly isNextStepEnable = computed(() => this.blocksValidity() &&
     !this.state.loadOngoing() && this.loadingError() === undefined &&
     !this.state.syncOngoing() && this.state.syncError() === undefined);
 
-  private loadParamsSubscription = rxMethod<{ instanceId: string | undefined }>(
+  private readonly loadBlocksSub = rxMethod<{ instanceId: string | undefined }>(
     pipe(
       filter(({ instanceId }) => instanceId !== undefined),
       tap(() => patchState(this.state, () => ({ loadedBlocks: [], loadOngoing: true, loadError: undefined }))),
@@ -75,7 +75,7 @@ export class InstanceDetailStore implements OnDestroy {
     ),
   );
 
-  private syncParamsSubscription = rxMethod<{ instanceId: string | undefined, timestamp?: number }>(
+  private readonly syncBlocksSub = rxMethod<{ instanceId: string | undefined, timestamp?: number }>(
     pipe(
       filter(({ timestamp }) => timestamp !== undefined),
       tap(() => patchState(this.state, () => ({ syncOngoing: true, syncError: undefined }))),
@@ -92,25 +92,25 @@ export class InstanceDetailStore implements OnDestroy {
     ),
   );
 
-  setup(): void {
-    this.loadParamsSubscription(this.state.loadParams);
-    this.syncParamsSubscription(this.state.syncParams);
+  setup() {
+    this.loadBlocksSub(this.state.loadParams);
+    this.syncBlocksSub(this.state.syncParams);
   }
 
-  ngOnDestroy(): void {
-    this.loadParamsSubscription?.unsubscribe();
-    this.syncParamsSubscription?.unsubscribe();
+  ngOnDestroy() {
+    this.loadBlocksSub?.unsubscribe();
+    this.syncBlocksSub?.unsubscribe();
   }
 
-  getBlock(id: string): Signal<Block<unknown>> {
+  getBlock(id: string) {
     return computed(() => this.state.blocks().find(b => b.id === id) as Block<unknown>, { equal: isEqual });
   }
 
-  loadBlocks(data: { instanceId: string }): void {
+  loadBlocks(data: { instanceId: string }) {
     patchState(this.state, () => ({ loadParams: { instanceId: data.instanceId } }));
   }
 
-  updateBlock(data: { instanceId: string, blockId: string, value: unknown }): void {
+  updateBlock(data: { instanceId: string, blockId: string, value: unknown }) {
     patchState(this.state, state => {
       const blocks = [...state.blocks];
       const blockIndex = blocks.findIndex(b => b.id === data.blockId);
@@ -122,11 +122,11 @@ export class InstanceDetailStore implements OnDestroy {
     this.syncBlocks(data);
   }
 
-  syncBlocks(data: { instanceId: string }): void {
+  syncBlocks(data: { instanceId: string }) {
     patchState(this.state, () => ({ syncParams: { instanceId: data.instanceId, timestamp: Date.now() } }));
   }
 
-  reset(): void {
+  reset() {
     patchState(this.state, () => ({
         loadParams: { instanceId: undefined },
         loadedBlocks: [],

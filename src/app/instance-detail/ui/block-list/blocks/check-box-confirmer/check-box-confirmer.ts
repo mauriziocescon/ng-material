@@ -16,8 +16,8 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-import { ValidityStateDirective } from '../../../../../shared/validity-state.directive';
-import { UIUtilitiesService } from '../../../../../shared/ui-utilities.service';
+import { ValidityState } from '../../../../../shared/validity-state';
+import { ModalManager } from '../../../../../shared/modal-manager';
 
 import { InstanceDetailStore } from '../../../../store/instance-detail-store';
 
@@ -30,7 +30,7 @@ import { CheckBoxConfirmerBlock } from './check-box-confirmer-block';
     TranslocoPipe,
     MatCardModule,
     MatCheckboxModule,
-    ValidityStateDirective,
+    ValidityState,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -51,7 +51,7 @@ import { CheckBoxConfirmerBlock } from './check-box-confirmer-block';
 })
 export class CheckBoxConfirmer implements OnDestroy {
   private readonly transloco = inject(TranslocoService);
-  private readonly uiUtilities = inject(UIUtilitiesService);
+  private readonly modalManager = inject(ModalManager);
   private readonly instanceDetailStore = inject(InstanceDetailStore);
 
   readonly instanceId = input.required<string>();
@@ -116,7 +116,7 @@ export class CheckBoxConfirmer implements OnDestroy {
   private askForConfirmation() {
     this.modalSubscription?.unsubscribe();
 
-    this.modalSubscription = this.uiUtilities.modalConfirmer({
+    this.modalSubscription = this.modalManager.modalConfirmer({
       id: 'checkBoxConfirmer',
       title: this.transloco.translate('CONTAINER.CHECK_BOX_CONFIRMER.CONFIRMATION_TITLE'),
       message: this.transloco.translate('CONTAINER.CHECK_BOX_CONFIRMER.CONFIRMATION_MESSAGE'),

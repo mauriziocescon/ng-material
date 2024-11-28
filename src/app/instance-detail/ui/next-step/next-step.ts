@@ -6,8 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 
-import { UIUtilitiesService } from '../../../shared/ui-utilities.service';
-import { ModalAlert } from '../../../shared/modal.model';
+import { ModalManager } from '../../../shared/modal-manager';
+import { ModalAlert } from '../../../shared/modal';
 
 import { InstanceDetailStore } from '../../store/instance-detail-store';
 
@@ -74,7 +74,7 @@ import { InstanceDetailStore } from '../../store/instance-detail-store';
 export class NextStep {
   private readonly location = inject(Location);
   private readonly transloco = inject(TranslocoService);
-  private readonly uiUtilities = inject(UIUtilitiesService);
+  private readonly modalManager = inject(ModalManager);
   protected readonly instanceDetailStore = inject(InstanceDetailStore);
 
   readonly instanceId = input.required<string>();
@@ -109,7 +109,7 @@ export class NextStep {
         message: this.instanceDetailStore.syncingError() as string,
         buttonLabel: this.transloco.translate('CONTAINER.BLOCK_LIST.ALERT_BUTTON'),
       };
-      this.uiUtilities.modalAlert(modalAlert);
+      this.modalManager.modalAlert(modalAlert);
     }
   }
 }

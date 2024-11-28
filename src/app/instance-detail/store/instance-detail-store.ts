@@ -9,7 +9,7 @@ import { tapResponse } from '@ngrx/operators';
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
 
-import { Block } from '../../shared/block.model';
+import { Block } from '../../shared/block';
 
 import { InstanceDetailDataClient } from './instance-detail-data-client';
 

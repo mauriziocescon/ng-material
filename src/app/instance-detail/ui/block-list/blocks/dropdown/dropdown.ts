@@ -18,7 +18,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
-import { ValidityStateDirective } from '../../../../../shared/validity-state.directive';
+import { ValidityState } from '../../../../../shared/validity-state';
 
 import { InstanceDetailStore } from '../../../../store/instance-detail-store';
 
@@ -33,7 +33,7 @@ import { DropdownBlock } from './dropdown-block';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    ValidityStateDirective,
+    ValidityState,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

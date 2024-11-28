@@ -1,23 +1,22 @@
 import { inject, Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
-
 import { MatDialog } from '@angular/material/dialog';
 
-import { ModalAlert, ModalConfirmer } from './modal.model';
-
-import { ModalAlertComponent } from './modal-alert.component';
-import { ModalConfirmerComponent } from './modal-confirmer.component';
 import { first } from 'rxjs/operators';
+
+import { ModalAlert, ModalConfirmer } from './modal';
+
+import { ModalAlert as ModalAlertComp } from './modal-alert';
+import { ModalConfirmer as ModalConfirmerComp } from './modal-confirmer';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UIUtilitiesService {
-  private dialog = inject(MatDialog);
+export class ModalManager {
+  private readonly dialog = inject(MatDialog);
 
-  modalAlert(modalAlert: ModalAlert): Observable<void> {
-    const dialogRef = this.dialog.open(ModalAlertComponent, {
+  modalAlert(modalAlert: ModalAlert) {
+    const dialogRef = this.dialog.open(ModalAlertComp, {
       data: {
         title: modalAlert.title,
         message: modalAlert.message,
@@ -27,8 +26,8 @@ export class UIUtilitiesService {
     return dialogRef.afterClosed();
   }
 
-  modalConfirmer(modalConfirmer: ModalConfirmer): Observable<boolean | undefined> {
-    const dialogRef = this.dialog.open(ModalConfirmerComponent, {
+  modalConfirmer(modalConfirmer: ModalConfirmer) {
+    const dialogRef = this.dialog.open(ModalConfirmerComp, {
       data: {
         title: modalConfirmer.title,
         message: modalConfirmer.message,

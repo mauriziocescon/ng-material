@@ -19,7 +19,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
-import { ValidityStateDirective } from '../../../../../shared/validity-state.directive';
+import { ValidityState } from '../../../../../shared/validity-state';
 
 import { InstanceDetailStore } from '../../../../store/instance-detail-store';
 
@@ -35,7 +35,7 @@ import { TextInputBlock } from './text-input-block';
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    ValidityStateDirective,
+    ValidityState,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

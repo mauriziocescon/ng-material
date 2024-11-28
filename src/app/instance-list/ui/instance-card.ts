@@ -5,7 +5,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
-import { ValidityStateDirective } from '../../shared/validity-state.directive';
+import { ValidityState } from '../../shared/validity-state';
 
 import { Instance } from '../models/instance';
 
@@ -15,7 +15,7 @@ import { Instance } from '../models/instance';
     TranslocoPipe,
     MatButtonModule,
     MatCardModule,
-    ValidityStateDirective,
+    ValidityState,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

@@ -6,7 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import { AppConstants } from '../../core/app-constants';
 
-import { Block } from '../../shared/block.model';
+import { Block } from '../../shared/block';
 
 @Injectable()
 export class InstanceDetailDataClient {

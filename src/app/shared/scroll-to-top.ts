@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, Renderer2 } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, ElementRef, inject, Renderer2 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
 @Component({
@@ -25,16 +25,14 @@ import { DOCUMENT } from '@angular/common';
     '(click)': 'scrollToTop($event)',
   },
 })
-export class ScrollToTopComponent {
-  private el = inject(ElementRef);
-  private renderer = inject(Renderer2);
-  private document = inject(DOCUMENT);
+export class ScrollToTop {
+  private readonly el = inject(ElementRef);
+  private readonly renderer = inject(Renderer2);
+  private readonly document = inject(DOCUMENT);
 
-  constructor() {
-    this.renderer.setStyle(this.el.nativeElement, 'visibility', 'hidden');
-  }
+  private readonly domReady = afterNextRender(() => this.renderer.setStyle(this.el.nativeElement, 'visibility', 'hidden'));
 
-  onWindowScroll(event: any): void {
+  onWindowScroll(event: any) {
     const scrollTopHeight = this.document.documentElement.scrollTop || 0;
     if (scrollTopHeight > 100) {
       this.renderer.setStyle(this.el.nativeElement, 'visibility', 'visible');
@@ -43,7 +41,7 @@ export class ScrollToTopComponent {
     }
   }
 
-  scrollToTop(event: any): void {
+  scrollToTop(event: any) {
     this.document.documentElement.scrollTop = 0;
   }
 }

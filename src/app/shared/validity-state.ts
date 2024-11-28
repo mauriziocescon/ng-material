@@ -3,13 +3,13 @@ import { Directive, effect, ElementRef, inject, input, OnInit, Renderer2 } from 
 @Directive({
   selector: '[appValidityState]',
 })
-export class ValidityStateDirective implements OnInit {
-  private el = inject(ElementRef);
-  private renderer = inject(Renderer2);
+export class ValidityState implements OnInit {
+  private readonly el = inject(ElementRef);
+  private readonly renderer = inject(Renderer2);
 
-  valid = input.required<boolean>();
+  readonly valid = input.required<boolean>();
 
-  private validWatcher = effect(() => {
+  private readonly validWatcher = effect(() => {
     if (this.valid() === true) {
       this.removeInvalidSymbol();
       this.addValidSymbol();
@@ -19,25 +19,25 @@ export class ValidityStateDirective implements OnInit {
     }
   });
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.renderer.addClass(this.el.nativeElement, 'bi');
   }
 
-  private addValidSymbol(): void {
+  private addValidSymbol() {
     this.renderer.setStyle(this.el.nativeElement, 'color', 'green');
     this.renderer.addClass(this.el.nativeElement, 'bi-hand-thumbs-up-fill');
   }
 
-  private removeValidSymbol(): void {
+  private removeValidSymbol() {
     this.renderer.removeClass(this.el.nativeElement, 'bi-hand-thumbs-up-fill');
   }
 
-  private addInvalidSymbol(): void {
+  private addInvalidSymbol() {
     this.renderer.setStyle(this.el.nativeElement, 'color', 'red');
     this.renderer.addClass(this.el.nativeElement, 'bi-hand-thumbs-down-fill');
   }
 
-  private removeInvalidSymbol(): void {
+  private removeInvalidSymbol() {
     this.renderer.removeClass(this.el.nativeElement, 'bi-hand-thumbs-down-fill');
   }
 }

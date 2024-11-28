@@ -11,9 +11,9 @@ import {
 
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
-import { ScrollToTopComponent } from '../../../shared/scroll-to-top.component';
-import { ModalAlert } from '../../../shared/modal.model';
-import { UIUtilitiesService } from '../../../shared/ui-utilities.service';
+import { ScrollToTop } from '../../../shared/scroll-to-top';
+import { ModalAlert } from '../../../shared/modal';
+import { ModalManager } from '../../../shared/modal-manager';
 
 import { InstanceDetailStore } from '../../store/instance-detail-store';
 
@@ -24,7 +24,7 @@ import { BlockCompGenerator } from './blocks/block-comp-generator';
   imports: [
     TranslocoPipe,
     BlockCompGenerator,
-    ScrollToTopComponent,
+    ScrollToTop,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -55,7 +55,7 @@ import { BlockCompGenerator } from './blocks/block-comp-generator';
 })
 export class BlockList implements OnDestroy {
   private readonly transloco = inject(TranslocoService);
-  private readonly uiUtilities = inject(UIUtilitiesService);
+  private readonly modalManager = inject(ModalManager);
   protected readonly instanceDetailStore = inject(InstanceDetailStore);
 
   readonly instanceId = input.required<string>();
@@ -98,7 +98,7 @@ export class BlockList implements OnDestroy {
         message: this.error() as string,
         buttonLabel: this.transloco.translate('CONTAINER.BLOCK_LIST.ALERT_BUTTON'),
       };
-      this.uiUtilities.modalAlert(modalAlert);
+      this.modalManager.modalAlert(modalAlert);
     }
   }
 }

@@ -20,20 +20,20 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
       <button mat-button (click)="no()">{{ data.noButtonLabel }}</button>
     </div>`,
 })
-export class ModalConfirmerComponent {
-  protected dialogRef = inject(MatDialogRef<ModalConfirmerComponent>);
-  protected data: {
+export class ModalConfirmer {
+  protected readonly dialogRef = inject(MatDialogRef<ModalConfirmer>);
+  protected readonly data: {
     title: string,
     message: string,
     yesButtonLabel: string,
     noButtonLabel: string
   } = inject(MAT_DIALOG_DATA);
 
-  yes(): void {
+  yes() {
     this.dialogRef.close(true);
   }
 
-  no(): void {
+  no() {
     this.dialogRef.close(false);
   }
 }

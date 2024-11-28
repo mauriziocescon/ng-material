@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'app-text-filter-cp',
+  selector: 'app-text-filter',
   imports: [
     ReactiveFormsModule,
     TranslocoPipe,
@@ -41,27 +41,27 @@ import { MatInputModule } from '@angular/material/input';
       padding-bottom: var(--padding-m);
     }`,
 })
-export class TextFilterComponent implements OnInit, OnDestroy {
-  valueDidChange = output<string>();
+export class TextFilter implements OnInit, OnDestroy {
+  readonly valueDidChange = output<string>();
 
-  searchControl = new FormControl<string>('');
-  searchControlSubscription: Subscription | undefined;
+  protected readonly searchControl = new FormControl<string>('');
+  protected searchControlSubscription: Subscription | undefined = undefined;
 
-  isTextFilterNotEmpty = toSignal(this.searchControl.valueChanges.pipe(map(v => v !== '')));
+  protected readonly isTextFilterNotEmpty = toSignal(this.searchControl.valueChanges.pipe(map(v => v !== '')));
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.subscribeValueChanges();
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.searchControlSubscription?.unsubscribe();
   }
 
-  resetTextFilter(): void {
+  resetTextFilter() {
     this.searchControl.setValue('');
   }
 
-  private subscribeValueChanges(): void {
+  private subscribeValueChanges() {
     this.searchControlSubscription?.unsubscribe();
 
     this.searchControlSubscription = this.searchControl

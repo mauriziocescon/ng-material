@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { NavigationBarContainerComponent } from './shared/navigation-bar.container';
+import { NavigationBar } from './shared/navigation-bar';
 
 @Component({
   selector: 'app-root',
   imports: [
     RouterOutlet,
-    NavigationBarContainerComponent,
+    NavigationBar,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <app-navigation-bar-ct/>
+    <app-navigation-bar/>
     <router-outlet/>`,
 })
 export class AppComponent {

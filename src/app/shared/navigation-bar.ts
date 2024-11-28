@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { TranslocoPipe } from '@jsverse/transloco';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,9 +8,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { AppConstants } from '../core/app-constants';
+import { AppLanguage } from '../core/app-language';
 
 @Component({
-  selector: 'app-navigation-bar-cp',
+  selector: 'app-navigation-bar',
   imports: [
     TranslocoPipe,
     MatButtonModule,
@@ -27,7 +29,7 @@ import { AppConstants } from '../core/app-constants';
 
       <span class="spacer"></span>
 
-      @if (canOpenJsonServer) {
+      @if (canOpenJsonServer()) {
         <button mat-icon-button aria-label="open json server" (click)="openJsonServer()">
           <mat-icon>dns</mat-icon>
         </button>
@@ -50,27 +52,25 @@ import { AppConstants } from '../core/app-constants';
       flex: 1 1 auto;
     }`,
 })
-export class NavigationBarComponent {
-  private appConstants = inject(AppConstants);
+export class NavigationBar {
+  private readonly router = inject(Router);
+  private readonly appConstants = inject(AppConstants);
+  private readonly appLanguage = inject(AppLanguage);
 
-  languages = input.required<string[]>();
-  selectedLanguageId = input.required<string>();
-  languageDidChange = output<string>();
-  navigationDidChange = output<{ path: string }>();
+  protected readonly languages = signal(this.appLanguage.getSupportedLanguagesList());
+  protected readonly selectedLanguageId = signal<string>(this.appLanguage.getLanguageId());
 
-  get canOpenJsonServer(): boolean {
-    return this.appConstants.Application.SHOW_JSON_SERVER_API === true;
+  protected readonly canOpenJsonServer = computed(() => this.appConstants.Application.SHOW_JSON_SERVER_API === true);
+
+  selectLanguage(language: string) {
+    this.appLanguage.setLanguageId(language);
   }
 
-  selectLanguage(language: string): void {
-    this.languageDidChange.emit(language);
+  goToInstanceList() {
+    this.router.navigateByUrl('/instance-list');
   }
 
-  goToInstanceList(): void {
-    this.navigationDidChange.emit({ path: '/instance-list' });
-  }
-
-  openJsonServer(): void {
+  openJsonServer() {
     window.open(this.appConstants.Application.JSON_SERVER_API_URL);
   }
 }

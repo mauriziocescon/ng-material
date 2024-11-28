@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
 
-import { Block, BlockType } from '../../../../shared/block.model';
+import { Block, BlockType } from '../../../../shared/block';
 
 import { CheckBox } from './check-box/check-box';
 import { CheckBoxConfirmer } from './check-box-confirmer/check-box-confirmer';

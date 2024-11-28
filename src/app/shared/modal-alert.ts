@@ -19,15 +19,15 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
       <button mat-button color="primary" (click)="close()">{{ data.buttonLabel }}</button>
     </div>`,
 })
-export class ModalAlertComponent {
-  protected dialogRef = inject(MatDialogRef<ModalAlertComponent>);
-  protected data: {
+export class ModalAlert {
+  protected readonly dialogRef = inject(MatDialogRef<ModalAlert>);
+  protected readonly data: {
     title: string,
     message: string,
     buttonLabel: string,
   } = inject(MAT_DIALOG_DATA);
 
-  close(): void {
+  close() {
     this.dialogRef.close();
   }
 }

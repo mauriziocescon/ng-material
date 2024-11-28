@@ -20,7 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 
-import { ValidityStateDirective } from '../../../../../shared/validity-state.directive';
+import { ValidityState } from '../../../../../shared/validity-state';
 
 import { InstanceDetailStore } from '../../../../store/instance-detail-store';
 
@@ -37,7 +37,7 @@ import { DatePickerBlock } from './date-picker-block';
     MatFormFieldModule,
     MatInputModule,
     MatNativeDateModule,
-    ValidityStateDirective,
+    ValidityState,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

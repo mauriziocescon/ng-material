@@ -3,10 +3,10 @@ import { ChangeDetectionStrategy, Component, effect, inject, OnInit, untracked }
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 
-import { TextFilterComponent } from '../../shared/text-filter.component';
-import { ScrollToTopComponent } from '../../shared/scroll-to-top.component';
-import { UIUtilitiesService } from '../../shared/ui-utilities.service';
-import { ModalAlert } from '../../shared/modal.model';
+import { TextFilter } from '../../shared/text-filter';
+import { ScrollToTop } from '../../shared/scroll-to-top';
+import { ModalManager } from '../../shared/modal-manager';
+import { ModalAlert } from '../../shared/modal';
 
 import { InstanceListDataClient } from '../store/instance-list-data-client';
 import { InstanceListStore } from '../store/instance-list-store';
@@ -18,8 +18,8 @@ import { InstanceCard } from './instance-card';
   imports: [
     TranslocoPipe,
     InfiniteScrollDirective,
-    TextFilterComponent,
-    ScrollToTopComponent,
+    TextFilter,
+    ScrollToTop,
     InstanceCard,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,7 +33,7 @@ import { InstanceCard } from './instance-card';
       [infiniteScrollDisabled]="instanceListStore.isInfiniteScrollDisabled()"
       (scrolled)="pageDidScroll()">
 
-      <app-text-filter-cp (valueDidChange)="textSearchDidChange($event)"/>
+      <app-text-filter (valueDidChange)="textSearchDidChange($event)"/>
 
       @for (instance of instanceListStore.instances(); track instance.id) {
         <div class="instance">
@@ -63,7 +63,7 @@ import { InstanceCard } from './instance-card';
 })
 export class InstanceListPage implements OnInit {
   private readonly transloco = inject(TranslocoService);
-  private readonly uiUtilities = inject(UIUtilitiesService);
+  private readonly modalManager = inject(ModalManager);
   protected readonly instanceListStore = inject(InstanceListStore);
 
   private readonly errorWatcher = effect(() => {
@@ -76,7 +76,7 @@ export class InstanceListPage implements OnInit {
           message: this.instanceListStore.error() as string,
           buttonLabel: this.transloco.translate('CONTAINER.INSTANCE_LIST.ALERT_BUTTON'),
         };
-        this.uiUtilities.modalAlert(modalAlert);
+        this.modalManager.modalAlert(modalAlert);
       }
     });
   });

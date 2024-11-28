@@ -17,7 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-import { ValidityStateDirective } from '../../../../../shared/validity-state.directive';
+import { ValidityState } from '../../../../../shared/validity-state';
 
 import { InstanceDetailStore } from '../../../../store/instance-detail-store';
 
@@ -31,7 +31,7 @@ import { CheckBoxBlock } from './check-box-block';
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
-    ValidityStateDirective,
+    ValidityState,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

@@ -4,19 +4,19 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 
 import { BlockListContainerComponent } from './block-list/block-list.container';
-import { NextStepContainerComponent } from './next-step/next-step.container';
+import { NextStepComponent } from './next-step/next-step.component';
 
 @Component({
   selector: 'app-instance-detail-cp',
   imports: [
     BlockListContainerComponent,
-    NextStepContainerComponent,
+    NextStepComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="instance-detail">
       <div [class]="nextStep()">
-        <app-next-step-ct [instanceId]="instanceId()"/>
+        <app-next-step [instanceId]="instanceId()"/>
       </div>
       <div [class]="blockList()">
         <app-block-list-ct [instanceId]="instanceId()"/>

@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, untracked } from '@angular/core';
+import { Location } from '@angular/common';
 
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,8 +9,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { UIUtilitiesService } from '../../../shared/ui-utilities.service';
 import { ModalAlert } from '../../../shared/modal.model';
 
+import { InstanceDetailStore } from '../../store/instance-detail.store';
+
 @Component({
-  selector: 'app-next-step-cp',
+  selector: 'app-next-step',
   imports: [
     TranslocoPipe,
     MatButtonModule,
@@ -25,7 +28,11 @@ import { ModalAlert } from '../../../shared/modal.model';
         </mat-card-header>
         <mat-card-actions>
           <div class="action-btns">
-            <button mat-raised-button color="primary" (click)="moveToNextStep()" [disabled]="!nextStepBtnEnabled()">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="moveToNextStep()"
+              [disabled]="!instanceDetailStore.isNextStepEnable()">
               {{ "COMPONENT.NEXT_STEP.NEXT_STEP" | transloco }}
             </button>
 
@@ -34,7 +41,7 @@ import { ModalAlert } from '../../../shared/modal.model';
                 <mat-icon>done</mat-icon>
                 <span>{{ "COMPONENT.NEXT_STEP.SYNC" | transloco }}</span>
               </div>
-            } @else if (isSynchronizing()) {
+            } @else if (instanceDetailStore.isSyncingBlocks()) {
               <div>
                 <mat-icon>sync</mat-icon>
                 <span>{{ "COMPONENT.NEXT_STEP.SYNCING" | transloco }}</span>
@@ -65,43 +72,41 @@ import { ModalAlert } from '../../../shared/modal.model';
     }`,
 })
 export class NextStepComponent {
-  private transloco = inject(TranslocoService);
-  private uiUtilities = inject(UIUtilitiesService);
+  private readonly location = inject(Location);
+  private readonly transloco = inject(TranslocoService);
+  private readonly uiUtilities = inject(UIUtilitiesService);
+  readonly instanceDetailStore = inject(InstanceDetailStore);
 
-  nextStepBtnEnabled = input.required<boolean>();
-  syncing = input.required<boolean>();
-  syncError = input.required<string | undefined>();
-  nextStep = output<void>();
-  resetSelections = output<void>();
-  retrySync = output<void>();
+  readonly instanceId = input.required<string>();
 
-  isSynchronizing = computed(() => this.syncing());
-  isSynchronized = computed(() => !this.isSynchronizing() && this.syncError() === undefined);
-  canRetrySync = computed(() => !this.isSynchronizing() && this.syncError() !== undefined);
+  protected readonly isSynchronized = computed(() => {
+    return !this.instanceDetailStore.isSyncingBlocks() &&
+      this.instanceDetailStore.syncingError() === undefined;
+  });
+  protected readonly canRetrySync = computed(() => {
+    return !this.instanceDetailStore.isSyncingBlocks() &&
+      this.instanceDetailStore.syncingError() !== undefined;
+  });
 
-  private syncErrorWatcher = effect(() => {
-    this.syncError();
+  private readonly syncErrorWatcher = effect(() => {
+    this.instanceDetailStore.syncingError();
     untracked(() => this.showModalError());
   });
 
-  moveToNextStep(): void {
-    this.nextStep.emit();
+  moveToNextStep() {
+    this.location.back();
   }
 
-  reset(): void {
-    this.resetSelections.emit();
+  retrySyncronization() {
+    this.instanceDetailStore.syncBlocks({ instanceId: this.instanceId() });
   }
 
-  retrySyncronization(): void {
-    this.retrySync.emit();
-  }
-
-  private showModalError(): void {
-    if (this.syncError()) {
+  private showModalError() {
+    if (this.instanceDetailStore.syncingError()) {
       const modalAlert: ModalAlert = {
         id: 'blockListError',
         title: this.transloco.translate('CONTAINER.BLOCK_LIST.ALERT_TITLE'),
-        message: this.syncError() as string,
+        message: this.instanceDetailStore.syncingError() as string,
         buttonLabel: this.transloco.translate('CONTAINER.BLOCK_LIST.ALERT_BUTTON'),
       };
       this.uiUtilities.modalAlert(modalAlert);

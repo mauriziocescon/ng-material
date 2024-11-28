@@ -62,9 +62,9 @@ import { InstanceCard } from './instance-card';
     }`,
 })
 export class InstanceListPage implements OnInit {
-  readonly transloco = inject(TranslocoService);
-  readonly uiUtilities = inject(UIUtilitiesService);
-  readonly instanceListStore = inject(InstanceListStore);
+  private readonly transloco = inject(TranslocoService);
+  private readonly uiUtilities = inject(UIUtilitiesService);
+  protected readonly instanceListStore = inject(InstanceListStore);
 
   private readonly errorWatcher = effect(() => {
     this.instanceListStore.error();

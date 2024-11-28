@@ -40,7 +40,7 @@ import { Instance } from '../models/instance';
     }`,
 })
 export class InstanceCard {
-  readonly router = inject(Router);
+  private readonly router = inject(Router);
 
   readonly instance = input.required<Instance>();
 

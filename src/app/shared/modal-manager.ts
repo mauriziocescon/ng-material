@@ -15,7 +15,7 @@ import { ModalConfirmer as ModalConfirmerComp } from './modal-confirmer';
 export class ModalManager {
   private readonly dialog = inject(MatDialog);
 
-  modalAlert(modalAlert: ModalAlert) {
+  alert(modalAlert: ModalAlert) {
     const dialogRef = this.dialog.open(ModalAlertComp, {
       data: {
         title: modalAlert.title,
@@ -26,7 +26,7 @@ export class ModalManager {
     return dialogRef.afterClosed();
   }
 
-  modalConfirmer(modalConfirmer: ModalConfirmer) {
+  confirmer(modalConfirmer: ModalConfirmer) {
     const dialogRef = this.dialog.open(ModalConfirmerComp, {
       data: {
         title: modalConfirmer.title,

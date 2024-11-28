@@ -98,7 +98,7 @@ export class BlockList implements OnDestroy {
         message: this.error() as string,
         buttonLabel: this.transloco.translate('CONTAINER.BLOCK_LIST.ALERT_BUTTON'),
       };
-      this.modalManager.modalAlert(modalAlert);
+      this.modalManager.alert(modalAlert);
     }
   }
 }

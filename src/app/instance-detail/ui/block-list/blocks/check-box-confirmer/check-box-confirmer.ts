@@ -116,7 +116,7 @@ export class CheckBoxConfirmer implements OnDestroy {
   private askForConfirmation() {
     this.modalSubscription?.unsubscribe();
 
-    this.modalSubscription = this.modalManager.modalConfirmer({
+    this.modalSubscription = this.modalManager.confirmer({
       id: 'checkBoxConfirmer',
       title: this.transloco.translate('CONTAINER.CHECK_BOX_CONFIRMER.CONFIRMATION_TITLE'),
       message: this.transloco.translate('CONTAINER.CHECK_BOX_CONFIRMER.CONFIRMATION_MESSAGE'),

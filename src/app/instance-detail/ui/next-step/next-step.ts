@@ -109,7 +109,7 @@ export class NextStep {
         message: this.instanceDetailStore.syncingError() as string,
         buttonLabel: this.transloco.translate('CONTAINER.BLOCK_LIST.ALERT_BUTTON'),
       };
-      this.modalManager.modalAlert(modalAlert);
+      this.modalManager.alert(modalAlert);
     }
   }
 }

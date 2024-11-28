@@ -76,7 +76,7 @@ export class InstanceListPage implements OnInit {
           message: this.instanceListStore.error() as string,
           buttonLabel: this.transloco.translate('CONTAINER.INSTANCE_LIST.ALERT_BUTTON'),
         };
-        this.modalManager.modalAlert(modalAlert);
+        this.modalManager.alert(modalAlert);
       }
     });
   });

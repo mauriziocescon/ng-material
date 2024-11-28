@@ -15,15 +15,15 @@ import { ScrollToTopComponent } from '../../../shared/scroll-to-top.component';
 import { ModalAlert } from '../../../shared/modal.model';
 import { UIUtilitiesService } from '../../../shared/ui-utilities.service';
 
-import { InstanceDetailStore } from '../../store/instance-detail.store';
+import { InstanceDetailStore } from '../../store/instance-detail-store';
 
-import { GenericBlockContainerComponent } from './blocks/generic-block.container';
+import { BlockCompGenerator } from './blocks/block-comp-generator';
 
 @Component({
   selector: 'app-block-list',
   imports: [
     TranslocoPipe,
-    GenericBlockContainerComponent,
+    BlockCompGenerator,
     ScrollToTopComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,7 +31,7 @@ import { GenericBlockContainerComponent } from './blocks/generic-block.container
     @if (showData()) {
       @for (block of blocks(); track block.id) {
         <div class="generic-block">
-          <app-generic-block-ct [instanceId]="instanceId()" [block]="block"/>
+          <app-block-comp-generator [instanceId]="instanceId()" [block]="block"/>
         </div>
       }
       <div class="full-width-message">{{ "COMPONENT.BLOCK_LIST.LOAD_COMPLETED" | transloco }}</div>

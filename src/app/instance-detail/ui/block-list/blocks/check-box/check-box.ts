@@ -3,9 +3,9 @@ import {
   Component,
   computed,
   effect,
+  inject,
   input,
   OnDestroy,
-  output,
   untracked,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -19,10 +19,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { ValidityStateDirective } from '../../../../../shared/validity-state.directive';
 
-import { CheckBoxBlock } from './check-box.model';
+import { InstanceDetailStore } from '../../../../store/instance-detail-store';
+
+import { CheckBoxBlock } from './check-box-block';
 
 @Component({
-  selector: 'app-check-box-cp',
+  selector: 'app-check-box',
   imports: [
     ReactiveFormsModule,
     TranslocoPipe,
@@ -48,18 +50,24 @@ import { CheckBoxBlock } from './check-box.model';
       </mat-card-actions>
     </mat-card>`,
 })
-export class CheckBoxComponent implements OnDestroy {
-  block = input.required<CheckBoxBlock>();
-  valueDidChange = output<boolean>();
+export class CheckBox implements OnDestroy {
+  private readonly instanceDetailStore = inject(InstanceDetailStore);
 
-  label = computed(() => this.block().label);
-  description = computed(() => this.block().description);
-  valid = computed(() => this.block().valid);
+  readonly instanceId = input.required<string>();
+  readonly blockId = input.required<string>();
 
-  control = new FormControl<boolean>(false);
-  private controlSubscription: Subscription | undefined;
+  protected readonly block = computed<CheckBoxBlock>(() => {
+    return this.instanceDetailStore.getBlock(this.blockId())() as CheckBoxBlock;
+  });
 
-  private blockWatcher = effect(() => {
+  protected readonly label = computed(() => this.block().label);
+  protected readonly description = computed(() => this.block().description);
+  protected readonly valid = computed(() => this.block().valid);
+
+  readonly control = new FormControl<boolean>(false);
+  private controlSubscription: Subscription | undefined = undefined;
+
+  private readonly blockWatcher = effect(() => {
     this.block();
     untracked(() => {
       this.controlSubscription?.unsubscribe();
@@ -68,30 +76,34 @@ export class CheckBoxComponent implements OnDestroy {
     });
   });
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.controlSubscription?.unsubscribe();
   }
 
-  private setupController(): void {
+  private setupController() {
     const validators = [...(this.block().required ? [Validators.required] : [])];
     this.control.setValidators(validators);
     this.setDisableEnable(this.block().disabled, this.control);
     this.control.setValue(this.block()?.value ?? false);
   }
 
-  private subscribeValueChanges(): void {
+  private subscribeValueChanges() {
     this.controlSubscription?.unsubscribe();
 
     this.controlSubscription = this.control
       .valueChanges
-      .subscribe(value => this.valueDidChange.emit(value ?? false));
+      .subscribe(value => this.valueDidChange(value ?? false));
   }
 
-  private setDisableEnable(condition: boolean, control: FormControl): void {
+  private setDisableEnable(condition: boolean, control: FormControl) {
     if (condition) {
       control.disable();
     } else {
       control.enable();
     }
+  }
+
+  private valueDidChange(value: boolean) {
+    this.instanceDetailStore.updateBlock({ instanceId: this.instanceId(), blockId: this.blockId(), value });
   }
 }

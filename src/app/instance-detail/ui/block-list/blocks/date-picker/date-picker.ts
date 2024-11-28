@@ -3,9 +3,9 @@ import {
   Component,
   computed,
   effect,
+  inject,
   input,
   OnDestroy,
-  output,
   untracked,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -22,10 +22,12 @@ import { MatNativeDateModule } from '@angular/material/core';
 
 import { ValidityStateDirective } from '../../../../../shared/validity-state.directive';
 
-import { DatePickerBlock } from './date-picker.model';
+import { InstanceDetailStore } from '../../../../store/instance-detail-store';
+
+import { DatePickerBlock } from './date-picker-block';
 
 @Component({
-  selector: 'app-date-picker-cp',
+  selector: 'app-date-picker',
   imports: [
     ReactiveFormsModule,
     TranslocoPipe,
@@ -59,18 +61,24 @@ import { DatePickerBlock } from './date-picker.model';
       </mat-card-actions>
     </mat-card>`,
 })
-export class DatePickerComponent implements OnDestroy {
-  block = input.required<DatePickerBlock>();
-  valueDidChange = output<string | undefined>();
+export class DatePicker implements OnDestroy {
+  private readonly instanceDetailStore = inject(InstanceDetailStore);
 
-  label = computed(() => this.block().label);
-  description = computed(() => this.block().description);
-  valid = computed(() => this.block().valid);
+  readonly instanceId = input.required<string>();
+  readonly blockId = input.required<string>();
 
-  control = new FormControl<string>('');
-  private controlSubscription: Subscription | undefined;
+  protected readonly block = computed<DatePickerBlock>(() => {
+    return this.instanceDetailStore.getBlock(this.blockId())() as DatePickerBlock;
+  });
 
-  private blockWatcher = effect(() => {
+  protected readonly label = computed(() => this.block().label);
+  protected readonly description = computed(() => this.block().description);
+  protected readonly valid = computed(() => this.block().valid);
+
+  readonly control = new FormControl<string>('');
+  private controlSubscription: Subscription | undefined = undefined;
+
+  private readonly blockWatcher = effect(() => {
     this.block();
     untracked(() => {
       this.controlSubscription?.unsubscribe();
@@ -79,28 +87,32 @@ export class DatePickerComponent implements OnDestroy {
     });
   });
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.controlSubscription?.unsubscribe();
   }
 
-  private setupController(): void {
+  private setupController() {
     this.setDisableEnable(this.block().disabled, this.control);
     this.control.setValue(this.block().value ?? null);
   }
 
-  private subscribeValueChanges(): void {
+  private subscribeValueChanges() {
     this.controlSubscription?.unsubscribe();
 
     this.controlSubscription = this.control
       .valueChanges
-      .subscribe(value => this.valueDidChange.emit(value ?? undefined));
+      .subscribe(value => this.valueDidChange(value ?? undefined));
   }
 
-  private setDisableEnable(condition: boolean, control: FormControl): void {
+  private setDisableEnable(condition: boolean, control: FormControl) {
     if (condition) {
       control.disable();
     } else {
       control.enable();
     }
+  }
+
+  private valueDidChange(value: string | undefined) {
+    this.instanceDetailStore.updateBlock({ instanceId: this.instanceId(), blockId: this.blockId(), value });
   }
 }

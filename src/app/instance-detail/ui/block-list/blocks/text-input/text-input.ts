@@ -3,9 +3,9 @@ import {
   Component,
   computed,
   effect,
+  inject,
   input,
   OnDestroy,
-  output,
   untracked,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -21,10 +21,12 @@ import { MatInputModule } from '@angular/material/input';
 
 import { ValidityStateDirective } from '../../../../../shared/validity-state.directive';
 
-import { TextInputBlock } from './text-input.model';
+import { InstanceDetailStore } from '../../../../store/instance-detail-store';
+
+import { TextInputBlock } from './text-input-block';
 
 @Component({
-  selector: 'app-text-input-cp',
+  selector: 'app-text-input',
   imports: [
     ReactiveFormsModule,
     TranslocoPipe,
@@ -64,13 +66,19 @@ import { TextInputBlock } from './text-input.model';
       </mat-card-actions>
     </mat-card>`,
 })
-export class TextInputComponent implements OnDestroy {
-  block = input.required<TextInputBlock>();
-  valueDidChange = output<string | undefined>();
+export class TextInput implements OnDestroy {
+  private readonly instanceDetailStore = inject(InstanceDetailStore);
 
-  label = computed(() => this.block().label);
-  isTextInputNotEmpty = computed(() => !!this.block().value);
-  inputGroupMessage = computed(() => {
+  readonly instanceId = input.required<string>();
+  readonly blockId = input.required<string>();
+
+  protected readonly block = computed<TextInputBlock>(() => {
+    return this.instanceDetailStore.getBlock(this.blockId())() as TextInputBlock;
+  });
+
+  protected readonly label = computed(() => this.block().label);
+  protected readonly isTextInputNotEmpty = computed(() => !!this.block().value);
+  protected readonly inputGroupMessage = computed(() => {
     const minLength = this.block().minLength ?? -1;
     const maxLength = this.block().maxLength ?? -1;
 
@@ -84,7 +92,7 @@ export class TextInputComponent implements OnDestroy {
       return ``;
     }
   });
-  inputGroupParams = computed(() => {
+  protected readonly inputGroupParams = computed(() => {
     const minLength = this.block().minLength ?? -1;
     const maxLength = this.block().maxLength ?? -1;
 
@@ -105,12 +113,12 @@ export class TextInputComponent implements OnDestroy {
       return undefined;
     }
   });
-  valid = computed(() => this.block().valid);
+  protected readonly valid = computed(() => this.block().valid);
 
-  control = new FormControl<string>('');
-  private controlSubscription: Subscription | undefined;
+  readonly control = new FormControl<string>('');
+  private controlSubscription: Subscription | undefined = undefined;
 
-  private blockWatcher = effect(() => {
+  private readonly blockWatcher = effect(() => {
     this.block();
     untracked(() => {
       this.controlSubscription?.unsubscribe();
@@ -119,15 +127,15 @@ export class TextInputComponent implements OnDestroy {
     });
   });
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.controlSubscription?.unsubscribe();
   }
 
-  resetTextInput(): void {
+  resetTextInput() {
     this.control.setValue('');
   }
 
-  private setupController(): void {
+  private setupController() {
     const minLength = this.block().minLength ?? -1;
     const maxLength = this.block().maxLength ?? -1;
 
@@ -141,19 +149,23 @@ export class TextInputComponent implements OnDestroy {
     this.control.setValue(this.block().value ?? null);
   }
 
-  private subscribeValueChanges(): void {
+  private subscribeValueChanges() {
     this.controlSubscription?.unsubscribe();
 
     this.controlSubscription = this.control
       .valueChanges
-      .subscribe(value => this.valueDidChange.emit(value ?? undefined));
+      .subscribe(value => this.valueDidChange(value ?? undefined));
   }
 
-  private setDisableEnable(condition: boolean, control: FormControl): void {
+  private setDisableEnable(condition: boolean, control: FormControl) {
     if (condition) {
       control.disable();
     } else {
       control.enable();
     }
+  }
+
+  private valueDidChange(value: string | undefined) {
+    this.instanceDetailStore.updateBlock({ instanceId: this.instanceId(), blockId: this.blockId(), value });
   }
 }

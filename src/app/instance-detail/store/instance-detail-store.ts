@@ -11,7 +11,7 @@ import isEqual from 'lodash/isEqual';
 
 import { Block } from '../../shared/block.model';
 
-import { InstanceDetailService } from './instance-detail.service';
+import { InstanceDetailDataClient } from './instance-detail-data-client';
 
 type State = {
   loadParams: { instanceId: string | undefined };
@@ -29,7 +29,7 @@ type State = {
 
 @Injectable()
 export class InstanceDetailStore implements OnDestroy {
-  private instanceDetail = inject(InstanceDetailService);
+  private instanceDetail = inject(InstanceDetailDataClient);
 
   private state = signalState<State>({
     loadParams: { instanceId: undefined },

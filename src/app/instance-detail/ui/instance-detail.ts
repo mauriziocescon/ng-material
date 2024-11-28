@@ -15,8 +15,8 @@ import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/l
 
 import { map } from 'rxjs/operators';
 
-import { InstanceDetailService } from '../store/instance-detail.service';
-import { InstanceDetailStore } from '../store/instance-detail.store';
+import { InstanceDetailDataClient } from '../store/instance-detail-data-client';
+import { InstanceDetailStore } from '../store/instance-detail-store';
 
 import { BlockList } from './block-list/block-list';
 import { NextStep } from './next-step/next-step';
@@ -29,7 +29,7 @@ import { NextStep } from './next-step/next-step';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    InstanceDetailService,
+    InstanceDetailDataClient,
     InstanceDetailStore,
   ],
   template: `

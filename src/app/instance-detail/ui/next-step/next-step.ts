@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { UIUtilitiesService } from '../../../shared/ui-utilities.service';
 import { ModalAlert } from '../../../shared/modal.model';
 
-import { InstanceDetailStore } from '../../store/instance-detail.store';
+import { InstanceDetailStore } from '../../store/instance-detail-store';
 
 @Component({
   selector: 'app-next-step',

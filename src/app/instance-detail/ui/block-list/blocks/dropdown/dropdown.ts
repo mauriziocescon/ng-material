@@ -3,9 +3,9 @@ import {
   Component,
   computed,
   effect,
+  inject,
   input,
   OnDestroy,
-  output,
   untracked,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -20,10 +20,12 @@ import { MatSelectModule } from '@angular/material/select';
 
 import { ValidityStateDirective } from '../../../../../shared/validity-state.directive';
 
-import { DropdownBlock } from './dropdown-block.model';
+import { InstanceDetailStore } from '../../../../store/instance-detail-store';
+
+import { DropdownBlock } from './dropdown-block';
 
 @Component({
-  selector: 'app-dropdown-cp',
+  selector: 'app-dropdown',
   imports: [
     ReactiveFormsModule,
     TranslocoPipe,
@@ -56,18 +58,24 @@ import { DropdownBlock } from './dropdown-block.model';
       </mat-card-actions>
     </mat-card>`,
 })
-export class DropdownComponent implements OnDestroy {
-  block = input.required<DropdownBlock>();
-  valueDidChange = output<string | undefined>();
+export class Dropdown implements OnDestroy {
+  private readonly instanceDetailStore = inject(InstanceDetailStore);
 
-  label = computed(() => this.block().label);
-  choices = computed(() => this.block().choices);
-  valid = computed(() => this.block().valid);
+  readonly instanceId = input.required<string>();
+  readonly blockId = input.required<string>();
 
-  control = new FormControl<string>('');
-  private controlSubscription: Subscription | undefined;
+  protected readonly block = computed<DropdownBlock>(() => {
+    return this.instanceDetailStore.getBlock(this.blockId())() as DropdownBlock;
+  });
 
-  private blockWatcher = effect(() => {
+  protected readonly label = computed(() => this.block().label);
+  protected readonly choices = computed(() => this.block().choices);
+  protected readonly valid = computed(() => this.block().valid);
+
+  readonly control = new FormControl<string>('');
+  private controlSubscription: Subscription | undefined = undefined;
+
+  private readonly blockWatcher = effect(() => {
     this.block();
     untracked(() => {
       this.controlSubscription?.unsubscribe();
@@ -76,30 +84,34 @@ export class DropdownComponent implements OnDestroy {
     });
   });
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.controlSubscription?.unsubscribe();
   }
 
-  private setupController(): void {
+  private setupController() {
     const validators = [...(this.block().required ? [Validators.required] : [])];
     this.control.setValidators(validators);
     this.setDisableEnable(this.block().disabled, this.control);
     this.control.setValue(this.block().value ?? null);
   }
 
-  private subscribeValueChanges(): void {
+  private subscribeValueChanges() {
     this.controlSubscription?.unsubscribe();
 
     this.controlSubscription = this.control
       .valueChanges
-      .subscribe(value => this.valueDidChange.emit(value ?? undefined));
+      .subscribe(value => this.valueDidChange(value ?? undefined));
   }
 
-  private setDisableEnable(condition: boolean, control: FormControl): void {
+  private setDisableEnable(condition: boolean, control: FormControl) {
     if (condition) {
       control.disable();
     } else {
       control.enable();
     }
+  }
+
+  private valueDidChange(value: string | undefined) {
+    this.instanceDetailStore.updateBlock({ instanceId: this.instanceId(), blockId: this.blockId(), value });
   }
 }

@@ -22,7 +22,7 @@ import { MatCardModule } from '@angular/material/card';
       </mat-card-content>
     </mat-card>`,
 })
-export class UnknownComponent {
+export class Unknown {
   instanceId = input.required<string>();
   blockId = input.required<string>();
 }

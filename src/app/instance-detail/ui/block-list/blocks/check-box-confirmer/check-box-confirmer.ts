@@ -6,7 +6,6 @@ import {
   inject,
   input,
   OnDestroy,
-  output,
   untracked,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -20,10 +19,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ValidityStateDirective } from '../../../../../shared/validity-state.directive';
 import { UIUtilitiesService } from '../../../../../shared/ui-utilities.service';
 
-import { CheckBoxConfirmerBlock } from './check-box-confirmer.model';
+import { InstanceDetailStore } from '../../../../store/instance-detail-store';
+
+import { CheckBoxConfirmerBlock } from './check-box-confirmer-block';
 
 @Component({
-  selector: 'app-check-box-confirmer-cp',
+  selector: 'app-check-box-confirmer',
   imports: [
     ReactiveFormsModule,
     TranslocoPipe,
@@ -48,23 +49,28 @@ import { CheckBoxConfirmerBlock } from './check-box-confirmer.model';
       </mat-card-actions>
     </mat-card>`,
 })
-export class CheckBoxConfirmerComponent implements OnDestroy {
-  private transloco = inject(TranslocoService);
-  private uiUtilities = inject(UIUtilitiesService);
+export class CheckBoxConfirmer implements OnDestroy {
+  private readonly transloco = inject(TranslocoService);
+  private readonly uiUtilities = inject(UIUtilitiesService);
+  private readonly instanceDetailStore = inject(InstanceDetailStore);
 
-  block = input.required<CheckBoxConfirmerBlock>();
-  valueDidChange = output<boolean>();
+  readonly instanceId = input.required<string>();
+  readonly blockId = input.required<string>();
 
-  label = computed(() => this.block().label);
-  description = computed(() => this.block().description);
-  valid = computed(() => this.block().valid);
+  protected readonly block = computed<CheckBoxConfirmerBlock>(() => {
+    return this.instanceDetailStore.getBlock(this.blockId())() as CheckBoxConfirmerBlock;
+  });
 
-  control = new FormControl<boolean>(false);
-  private controlSubscription: Subscription | undefined;
+  protected readonly label = computed(() => this.block().label);
+  protected readonly description = computed(() => this.block().description);
+  protected readonly valid = computed(() => this.block().valid);
 
-  private modalSubscription: Subscription | undefined;
+  readonly control = new FormControl<boolean>(false);
+  private controlSubscription: Subscription | undefined = undefined;
 
-  private blockWatcher = effect(() => {
+  private modalSubscription: Subscription | undefined = undefined;
+
+  private readonly blockWatcher = effect(() => {
     this.block();
     untracked(() => {
       this.controlSubscription?.unsubscribe();
@@ -73,19 +79,19 @@ export class CheckBoxConfirmerComponent implements OnDestroy {
     });
   });
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.controlSubscription?.unsubscribe();
     this.modalSubscription?.unsubscribe();
   }
 
-  private setupController(): void {
+  private setupController() {
     const validators = [...(this.block().required ? [Validators.required] : [])];
     this.control.setValidators(validators);
     this.setDisableEnable(this.block().disabled, this.control);
     this.control.setValue(this.block()?.value ?? false);
   }
 
-  private subscribeValueChanges(): void {
+  private subscribeValueChanges() {
     this.controlSubscription?.unsubscribe();
 
     this.controlSubscription = this.control
@@ -94,12 +100,12 @@ export class CheckBoxConfirmerComponent implements OnDestroy {
         if (value === true) {
           this.askForConfirmation();
         } else {
-          this.valueDidChange.emit(false);
+          this.valueDidChange(false);
         }
       });
   }
 
-  private setDisableEnable(condition: boolean, control: FormControl): void {
+  private setDisableEnable(condition: boolean, control: FormControl) {
     if (condition) {
       control.disable();
     } else {
@@ -107,7 +113,7 @@ export class CheckBoxConfirmerComponent implements OnDestroy {
     }
   }
 
-  private askForConfirmation(): void {
+  private askForConfirmation() {
     this.modalSubscription?.unsubscribe();
 
     this.modalSubscription = this.uiUtilities.modalConfirmer({
@@ -119,11 +125,15 @@ export class CheckBoxConfirmerComponent implements OnDestroy {
     })
       .subscribe(result => {
         if (result === true) {
-          this.valueDidChange.emit(true);
+          this.valueDidChange(true);
         } else {
           this.control.setValue(false);
-          this.valueDidChange.emit(false);
+          this.valueDidChange(false);
         }
       });
+  }
+
+  private valueDidChange(value: boolean) {
+    this.instanceDetailStore.updateBlock({ instanceId: this.instanceId(), blockId: this.blockId(), value });
   }
 }

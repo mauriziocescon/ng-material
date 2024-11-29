@@ -1,14 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  OnDestroy,
-  untracked,
-} from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
 
@@ -26,7 +17,7 @@ import { CheckBoxConfirmerBlock } from './check-box-confirmer-block';
 @Component({
   selector: 'app-check-box-confirmer',
   imports: [
-    ReactiveFormsModule,
+    FormsModule,
     TranslocoPipe,
     MatCardModule,
     MatCheckboxModule,
@@ -42,74 +33,45 @@ import { CheckBoxConfirmerBlock } from './check-box-confirmer-block';
       </mat-card-header>
       <mat-card-content>
         <label>{{ label() | transloco }}</label>
-        <mat-checkbox [formControl]="control">{{ description() | transloco }}</mat-checkbox>
+        <mat-checkbox
+          [(ngModel)]="value"
+          (ngModelChange)="valueDidChange()"
+          [disabled]="disabled()"
+          [required]="required()">
+          {{ description() | transloco }}
+        </mat-checkbox>
       </mat-card-content>
       <mat-card-actions>
         <span appValidityState [valid]="valid()"></span>
       </mat-card-actions>
     </mat-card>`,
 })
-export class CheckBoxConfirmer implements OnDestroy {
+export class CheckBoxConfirmer {
   private readonly transloco = inject(TranslocoService);
   private readonly modalManager = inject(ModalManager);
   private readonly instanceDetailStore = inject(InstanceDetailStore);
 
   readonly instanceId = input.required<string>();
-  readonly blockId = input.required<string>();
+  readonly block = input.required<CheckBoxConfirmerBlock>();
 
-  protected readonly block = computed<CheckBoxConfirmerBlock>(() => {
-    return this.instanceDetailStore.getBlock(this.blockId())() as CheckBoxConfirmerBlock;
-  });
-
+  protected readonly value = linkedSignal(() => this.block().value ?? false);
+  protected readonly disabled = computed(() => this.block().disabled);
+  protected readonly required = computed(() => this.block().required);
   protected readonly label = computed(() => this.block().label);
   protected readonly description = computed(() => this.block().description);
   protected readonly valid = computed(() => this.block().valid);
 
-  readonly control = new FormControl<boolean>(false);
-  private controlSubscription: Subscription | undefined = undefined;
-
   private modalSubscription: Subscription | undefined = undefined;
 
-  private readonly blockWatcher = effect(() => {
-    this.block();
-    untracked(() => {
-      this.controlSubscription?.unsubscribe();
-      this.setupController();
-      this.subscribeValueChanges();
-    });
-  });
-
-  ngOnDestroy() {
-    this.controlSubscription?.unsubscribe();
-    this.modalSubscription?.unsubscribe();
-  }
-
-  private setupController() {
-    const validators = [...(this.block().required ? [Validators.required] : [])];
-    this.control.setValidators(validators);
-    this.setDisableEnable(this.block().disabled, this.control);
-    this.control.setValue(this.block()?.value ?? false);
-  }
-
-  private subscribeValueChanges() {
-    this.controlSubscription?.unsubscribe();
-
-    this.controlSubscription = this.control
-      .valueChanges
-      .subscribe(value => {
-        if (value === true) {
-          this.askForConfirmation();
-        } else {
-          this.valueDidChange(false);
-        }
-      });
-  }
-
-  private setDisableEnable(condition: boolean, control: FormControl) {
-    if (condition) {
-      control.disable();
+  valueDidChange() {
+    if (this.value() === true) {
+      this.askForConfirmation();
     } else {
-      control.enable();
+      this.instanceDetailStore.updateBlock({
+        instanceId: this.instanceId(),
+        blockId: this.block().id,
+        value: this.value(),
+      });
     }
   }
 
@@ -125,15 +87,14 @@ export class CheckBoxConfirmer implements OnDestroy {
     })
       .subscribe(result => {
         if (result === true) {
-          this.valueDidChange(true);
+          this.instanceDetailStore.updateBlock({
+            instanceId: this.instanceId(),
+            blockId: this.block().id,
+            value: this.value(),
+          });
         } else {
-          this.control.setValue(false);
-          this.valueDidChange(false);
+          this.value.set(false);
         }
       });
-  }
-
-  private valueDidChange(value: boolean) {
-    this.instanceDetailStore.updateBlock({ instanceId: this.instanceId(), blockId: this.blockId(), value });
   }
 }

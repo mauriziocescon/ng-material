@@ -65,11 +65,7 @@ export class DatePicker implements OnDestroy {
   private readonly instanceDetailStore = inject(InstanceDetailStore);
 
   readonly instanceId = input.required<string>();
-  readonly blockId = input.required<string>();
-
-  protected readonly block = computed<DatePickerBlock>(() => {
-    return this.instanceDetailStore.getBlock(this.blockId())() as DatePickerBlock;
-  });
+  readonly block = input.required<DatePickerBlock>();
 
   protected readonly label = computed(() => this.block().label);
   protected readonly description = computed(() => this.block().description);
@@ -113,6 +109,6 @@ export class DatePicker implements OnDestroy {
   }
 
   private valueDidChange(value: string | undefined) {
-    this.instanceDetailStore.updateBlock({ instanceId: this.instanceId(), blockId: this.blockId(), value });
+    this.instanceDetailStore.updateBlock({ instanceId: this.instanceId(), blockId: this.block().id, value });
   }
 }

@@ -7,7 +7,6 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
 
 import cloneDeep from 'lodash/cloneDeep';
-import isEqual from 'lodash/isEqual';
 
 import { Block } from '../../shared/block';
 
@@ -100,10 +99,6 @@ export class InstanceDetailStore implements OnDestroy {
   ngOnDestroy() {
     this.loadBlocksSub?.unsubscribe();
     this.syncBlocksSub?.unsubscribe();
-  }
-
-  getBlock(id: string) {
-    return computed(() => this.state.blocks().find(b => b.id === id) as Block<unknown>, { equal: isEqual });
   }
 
   loadBlocks(data: { instanceId: string }) {

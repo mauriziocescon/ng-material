@@ -1,16 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  OnDestroy,
-  untracked,
-} from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { TranslocoPipe } from '@jsverse/transloco';
 import { MatButtonModule } from '@angular/material/button';
@@ -26,7 +15,7 @@ import { CheckBoxBlock } from './check-box-block';
 @Component({
   selector: 'app-check-box',
   imports: [
-    ReactiveFormsModule,
+    FormsModule,
     TranslocoPipe,
     MatButtonModule,
     MatCardModule,
@@ -43,67 +32,37 @@ import { CheckBoxBlock } from './check-box-block';
       </mat-card-header>
       <mat-card-content>
         <label>{{ label() | transloco }}</label>
-        <mat-checkbox [formControl]="control">{{ description() | transloco }}</mat-checkbox>
+        <mat-checkbox
+          [(ngModel)]="value"
+          (ngModelChange)="valueDidChange()"
+          [disabled]="disabled()"
+          [required]="required()">
+          {{ description() | transloco }}
+        </mat-checkbox>
       </mat-card-content>
       <mat-card-actions>
         <span appValidityState [valid]="valid()"></span>
       </mat-card-actions>
     </mat-card>`,
 })
-export class CheckBox implements OnDestroy {
+export class CheckBox {
   private readonly instanceDetailStore = inject(InstanceDetailStore);
 
   readonly instanceId = input.required<string>();
-  readonly blockId = input.required<string>();
+  readonly block = input.required<CheckBoxBlock>();
 
-  protected readonly block = computed<CheckBoxBlock>(() => {
-    return this.instanceDetailStore.getBlock(this.blockId())() as CheckBoxBlock;
-  });
-
+  protected readonly value = linkedSignal(() => this.block().value ?? false);
+  protected readonly disabled = computed(() => this.block().disabled);
+  protected readonly required = computed(() => this.block().required);
   protected readonly label = computed(() => this.block().label);
   protected readonly description = computed(() => this.block().description);
   protected readonly valid = computed(() => this.block().valid);
 
-  readonly control = new FormControl<boolean>(false);
-  private controlSubscription: Subscription | undefined = undefined;
-
-  private readonly blockWatcher = effect(() => {
-    this.block();
-    untracked(() => {
-      this.controlSubscription?.unsubscribe();
-      this.setupController();
-      this.subscribeValueChanges();
+  valueDidChange() {
+    this.instanceDetailStore.updateBlock({
+      instanceId: this.instanceId(),
+      blockId: this.block().id,
+      value: this.value(),
     });
-  });
-
-  ngOnDestroy() {
-    this.controlSubscription?.unsubscribe();
-  }
-
-  private setupController() {
-    const validators = [...(this.block().required ? [Validators.required] : [])];
-    this.control.setValidators(validators);
-    this.setDisableEnable(this.block().disabled, this.control);
-    this.control.setValue(this.block()?.value ?? false);
-  }
-
-  private subscribeValueChanges() {
-    this.controlSubscription?.unsubscribe();
-
-    this.controlSubscription = this.control
-      .valueChanges
-      .subscribe(value => this.valueDidChange(value ?? false));
-  }
-
-  private setDisableEnable(condition: boolean, control: FormControl) {
-    if (condition) {
-      control.disable();
-    } else {
-      control.enable();
-    }
-  }
-
-  private valueDidChange(value: boolean) {
-    this.instanceDetailStore.updateBlock({ instanceId: this.instanceId(), blockId: this.blockId(), value });
   }
 }

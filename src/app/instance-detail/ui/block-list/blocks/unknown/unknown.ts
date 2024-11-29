@@ -24,5 +24,5 @@ import { MatCardModule } from '@angular/material/card';
 })
 export class Unknown {
   instanceId = input.required<string>();
-  blockId = input.required<string>();
+  block = input.required<unknown>();
 }

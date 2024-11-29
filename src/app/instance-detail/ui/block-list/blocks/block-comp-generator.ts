@@ -26,7 +26,7 @@ export class BlockCompGenerator {
   protected readonly component = computed(() => this.getComponent(this.block()));
   protected readonly inputs = computed(() => ({
     instanceId: this.instanceId(),
-    blockId: this.block().id,
+    block: this.block(),
   }));
 
   private getComponent(block: Block<unknown>) {

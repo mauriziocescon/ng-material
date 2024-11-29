@@ -1,16 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  OnDestroy,
-  untracked,
-} from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { TranslocoPipe } from '@jsverse/transloco';
 import { MatCardModule } from '@angular/material/card';
@@ -27,13 +16,14 @@ import { DropdownBlock } from './dropdown-block';
 @Component({
   selector: 'app-dropdown',
   imports: [
-    ReactiveFormsModule,
+    FormsModule,
     TranslocoPipe,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     ValidityState,
+
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -46,7 +36,11 @@ import { DropdownBlock } from './dropdown-block';
       <mat-card-content>
         <mat-form-field appearance="outline" class="card-content">
           <mat-label>{{ label() | transloco }}</mat-label>
-          <mat-select [formControl]="control">
+          <mat-select
+            [(ngModel)]="value"
+            (ngModelChange)="valueDidChange()"
+            [disabled]="disabled()"
+            [required]="required()">
             @for (value of choices(); track value) {
               <mat-option [value]="value"> {{ value }}</mat-option>
             }
@@ -58,60 +52,24 @@ import { DropdownBlock } from './dropdown-block';
       </mat-card-actions>
     </mat-card>`,
 })
-export class Dropdown implements OnDestroy {
+export class Dropdown {
   private readonly instanceDetailStore = inject(InstanceDetailStore);
 
   readonly instanceId = input.required<string>();
-  readonly blockId = input.required<string>();
+  readonly block = input.required<DropdownBlock>();
 
-  protected readonly block = computed<DropdownBlock>(() => {
-    return this.instanceDetailStore.getBlock(this.blockId())() as DropdownBlock;
-  });
-
+  protected readonly value = linkedSignal(() => this.block().value ?? null);
+  protected readonly disabled = computed(() => this.block().disabled);
+  protected readonly required = computed(() => this.block().required);
   protected readonly label = computed(() => this.block().label);
   protected readonly choices = computed(() => this.block().choices);
   protected readonly valid = computed(() => this.block().valid);
 
-  readonly control = new FormControl<string>('');
-  private controlSubscription: Subscription | undefined = undefined;
-
-  private readonly blockWatcher = effect(() => {
-    this.block();
-    untracked(() => {
-      this.controlSubscription?.unsubscribe();
-      this.setupController();
-      this.subscribeValueChanges();
+  valueDidChange() {
+    this.instanceDetailStore.updateBlock({
+      instanceId: this.instanceId(),
+      blockId: this.block().id,
+      value: this.value(),
     });
-  });
-
-  ngOnDestroy() {
-    this.controlSubscription?.unsubscribe();
-  }
-
-  private setupController() {
-    const validators = [...(this.block().required ? [Validators.required] : [])];
-    this.control.setValidators(validators);
-    this.setDisableEnable(this.block().disabled, this.control);
-    this.control.setValue(this.block().value ?? null);
-  }
-
-  private subscribeValueChanges() {
-    this.controlSubscription?.unsubscribe();
-
-    this.controlSubscription = this.control
-      .valueChanges
-      .subscribe(value => this.valueDidChange(value ?? undefined));
-  }
-
-  private setDisableEnable(condition: boolean, control: FormControl) {
-    if (condition) {
-      control.disable();
-    } else {
-      control.enable();
-    }
-  }
-
-  private valueDidChange(value: string | undefined) {
-    this.instanceDetailStore.updateBlock({ instanceId: this.instanceId(), blockId: this.blockId(), value });
   }
 }

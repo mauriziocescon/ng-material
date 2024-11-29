@@ -6,8 +6,6 @@ import { patchState, signalState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
 
-import cloneDeep from 'lodash/cloneDeep';
-
 import { Block } from '../../shared/block';
 
 import { InstanceDetailDataClient } from './instance-detail-data-client';
@@ -65,7 +63,7 @@ export class InstanceDetailStore implements OnDestroy {
       switchMap(({ instanceId }) => this.instanceDetail.getBlocks(instanceId as string)
         .pipe(
           tapResponse({
-            next: data => patchState(this.state, { loadedBlocks: data, blocks: cloneDeep(data) }),
+            next: data => patchState(this.state, { loadedBlocks: data, blocks: structuredClone(data) }),
             error: (err: string) => patchState(this.state, { loadError: err }),
             finalize: () => patchState(this.state, { loadOngoing: false }),
           }),

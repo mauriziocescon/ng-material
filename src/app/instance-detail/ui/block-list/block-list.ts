@@ -59,11 +59,6 @@ export class BlockList {
   protected readonly hasNoData = computed(() => this.blocks()?.length === 0 ? this.isLoading() === false && this.shouldRetry() === false : false);
   protected readonly showData = computed(() => this.isLoading() === false && this.hasNoData() === false && this.shouldRetry() === false);
 
-  private readonly instanceIdWatcher = effect(() => {
-    this.instanceId();
-    untracked(() => this.reloadList());
-  });
-
   private readonly errorWatcher = effect(() => {
     this.error();
     untracked(() => this.showModalError());

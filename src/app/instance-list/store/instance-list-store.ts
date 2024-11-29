@@ -75,22 +75,9 @@ export class InstanceListStore implements OnDestroy {
 
   ngOnDestroy() {
     this.loadInstances?.unsubscribe();
-    this.reset();
   }
 
   updateParams(params: { textSearch: string | undefined, pageNumber: number }) {
     patchState(this.state, () => ({ params: { ...params } }));
-  }
-
-  private reset() {
-    patchState(this.state, () => ({
-        params: { textSearch: undefined, pageNumber: 1 },
-
-        instances: [],
-        loading: false,
-        error: undefined,
-        lastPage: false,
-      }),
-    );
   }
 }

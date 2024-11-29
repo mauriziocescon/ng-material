@@ -97,7 +97,6 @@ export class InstanceDetailStore implements OnDestroy {
   ngOnDestroy() {
     this.loadBlocksSub?.unsubscribe();
     this.syncBlocksSub?.unsubscribe();
-    this.reset();
   }
 
   loadBlocks(data: { instanceId: string }) {
@@ -118,21 +117,5 @@ export class InstanceDetailStore implements OnDestroy {
 
   syncBlocks(data: { instanceId: string }) {
     patchState(this.state, () => ({ syncParams: { instanceId: data.instanceId } }));
-  }
-
-  reset() {
-    patchState(this.state, () => ({
-        loadParams: { instanceId: undefined },
-        loadedBlocks: [],
-        loadOngoing: false,
-        loadError: undefined,
-
-        blocks: [],
-
-        syncParams: { instanceId: undefined },
-        syncOngoing: false,
-        syncError: undefined,
-      }),
-    );
   }
 }

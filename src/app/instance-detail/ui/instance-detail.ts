@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 
@@ -71,7 +71,11 @@ export class InstanceDetail implements OnInit {
   private readonly paramId$ = this.route.paramMap.pipe(map(params => params.get('id') as string));
   protected readonly instanceId = toSignal(this.paramId$, { initialValue: '' });
 
-  canDeactivate = toObservable(this.instanceDetailStore.isSyncRequired).pipe(map(v => !v));
+  readonly canDeactivate = toObservable(this.instanceDetailStore.isSyncRequired).pipe(map(v => !v));
+
+  private readonly paramIdSub = this.paramId$
+    .pipe(takeUntilDestroyed())
+    .subscribe(id => this.loadBlocks(id));
 
   protected readonly breakPoints = toSignal(this.breakpointObserver.observe([
     Breakpoints.XLarge,
@@ -111,5 +115,9 @@ export class InstanceDetail implements OnInit {
 
   ngOnInit() {
     this.instanceDetailStore.setup();
+  }
+
+  loadBlocks(instanceId: string) {
+    this.instanceDetailStore.loadBlocks({ instanceId });
   }
 }

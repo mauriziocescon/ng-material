@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, output } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { outputFromObservable, toObservable } from '@angular/core/rxjs-interop';
 
-import { Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+
+import isEmpty from 'lodash/isEmpty';
 
 import { TranslocoPipe } from '@jsverse/transloco';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,7 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'app-text-filter',
   imports: [
-    ReactiveFormsModule,
+    FormsModule,
     TranslocoPipe,
     MatButtonModule,
     MatFormFieldModule,
@@ -25,8 +26,11 @@ import { MatInputModule } from '@angular/material/input';
   template: `
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>{{ 'COMPONENT.TEXT_FILTER.PLACEHOLDER' | transloco }}</mat-label>
-      <input matInput type="text" [formControl]="searchControl">
-      @if (isTextFilterNotEmpty()) {
+      <input
+        type="text"
+        matInput
+        [(ngModel)]="value">
+      @if (isNotEmpty()) {
         <button matSuffix mat-icon-button aria-label="Clear" (click)="resetTextFilter()">
           <mat-icon>close</mat-icon>
         </button>
@@ -41,32 +45,14 @@ import { MatInputModule } from '@angular/material/input';
       padding-bottom: var(--padding-m);
     }`,
 })
-export class TextFilter implements OnInit, OnDestroy {
-  readonly valueDidChange = output<string>();
+export class TextFilter {
+  protected readonly value = signal('');
+  protected readonly isNotEmpty = computed(() => !isEmpty(this.value()));
 
-  protected readonly searchControl = new FormControl<string>('');
-  protected searchControlSubscription: Subscription | undefined = undefined;
-
-  protected readonly isTextFilterNotEmpty = toSignal(this.searchControl.valueChanges.pipe(map(v => v !== '')));
-
-  ngOnInit() {
-    this.subscribeValueChanges();
-  }
-
-  ngOnDestroy() {
-    this.searchControlSubscription?.unsubscribe();
-  }
+  protected readonly value$ = toObservable(this.value).pipe(debounceTime(500), distinctUntilChanged());
+  readonly valueDidChange = outputFromObservable(this.value$);
 
   resetTextFilter() {
-    this.searchControl.setValue('');
-  }
-
-  private subscribeValueChanges() {
-    this.searchControlSubscription?.unsubscribe();
-
-    this.searchControlSubscription = this.searchControl
-      .valueChanges
-      .pipe(debounceTime(500), distinctUntilChanged())
-      .subscribe(value => this.valueDidChange.emit(value ?? ''));
+    this.value.set('');
   }
 }

@@ -1,16 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  OnDestroy,
-  untracked,
-} from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-
-import { Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { TranslocoPipe } from '@jsverse/transloco';
 import { MatCardModule } from '@angular/material/card';
@@ -29,7 +18,7 @@ import { DatePickerBlock } from './date-picker-block';
 @Component({
   selector: 'app-date-picker',
   imports: [
-    ReactiveFormsModule,
+    FormsModule,
     TranslocoPipe,
     MatCardModule,
     MatCheckboxModule,
@@ -50,7 +39,13 @@ import { DatePickerBlock } from './date-picker-block';
       <mat-card-content>
         <mat-form-field appearance="outline" class="card-content">
           <mat-label>{{ label() | transloco }}</mat-label>
-          <input matInput [matDatepicker]="picker1" [formControl]="control"/>
+          <input
+            matInput
+            [matDatepicker]="picker1"
+            [(ngModel)]="value"
+            (ngModelChange)="valueDidChange()"
+            [disabled]="disabled()"
+            [required]="required()"/>
           <mat-hint>MM/DD/YYYY</mat-hint>
           <mat-datepicker-toggle matIconSuffix [for]="picker1"/>
           <mat-datepicker #picker1/>
@@ -61,54 +56,24 @@ import { DatePickerBlock } from './date-picker-block';
       </mat-card-actions>
     </mat-card>`,
 })
-export class DatePicker implements OnDestroy {
+export class DatePicker {
   private readonly instanceDetailStore = inject(InstanceDetailStore);
 
   readonly instanceId = input.required<string>();
   readonly block = input.required<DatePickerBlock>();
 
+  protected readonly value = linkedSignal(() => this.block().value ?? null);
+  protected readonly disabled = computed(() => this.block().disabled);
+  protected readonly required = computed(() => this.block().required);
   protected readonly label = computed(() => this.block().label);
   protected readonly description = computed(() => this.block().description);
   protected readonly valid = computed(() => this.block().valid);
 
-  readonly control = new FormControl<string>('');
-  private controlSubscription: Subscription | undefined = undefined;
-
-  private readonly blockWatcher = effect(() => {
-    this.block();
-    untracked(() => {
-      this.controlSubscription?.unsubscribe();
-      this.setupController();
-      this.subscribeValueChanges();
+  valueDidChange() {
+    this.instanceDetailStore.updateBlock({
+      instanceId: this.instanceId(),
+      blockId: this.block().id,
+      value: this.value(),
     });
-  });
-
-  ngOnDestroy() {
-    this.controlSubscription?.unsubscribe();
-  }
-
-  private setupController() {
-    this.setDisableEnable(this.block().disabled, this.control);
-    this.control.setValue(this.block().value ?? null);
-  }
-
-  private subscribeValueChanges() {
-    this.controlSubscription?.unsubscribe();
-
-    this.controlSubscription = this.control
-      .valueChanges
-      .subscribe(value => this.valueDidChange(value ?? undefined));
-  }
-
-  private setDisableEnable(condition: boolean, control: FormControl) {
-    if (condition) {
-      control.disable();
-    } else {
-      control.enable();
-    }
-  }
-
-  private valueDidChange(value: string | undefined) {
-    this.instanceDetailStore.updateBlock({ instanceId: this.instanceId(), blockId: this.block().id, value });
   }
 }

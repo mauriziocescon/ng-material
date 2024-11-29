@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 
 import { map } from 'rxjs/operators';
 
-import { InstanceDetailDataClient } from '../store/instance-detail-data-client';
 import { InstanceDetailStore } from '../store/instance-detail-store';
 
 import { BlockList } from './block-list/block-list';
@@ -18,10 +17,6 @@ import { NextStep } from './next-step/next-step';
     NextStep,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    InstanceDetailDataClient,
-    InstanceDetailStore,
-  ],
   template: `
     <div class="instance-detail">
       <div [class]="nextStep()">
@@ -63,10 +58,10 @@ import { NextStep } from './next-step/next-step';
       width: 100%;
     }`,
 })
-export class InstanceDetail implements OnInit {
-  private route = inject(ActivatedRoute);
-  private breakpointObserver = inject(BreakpointObserver);
-  private instanceDetailStore = inject(InstanceDetailStore);
+export class InstanceDetail {
+  private readonly route = inject(ActivatedRoute);
+  private readonly breakpointObserver = inject(BreakpointObserver);
+  private readonly instanceDetailStore = inject(InstanceDetailStore);
 
   private readonly paramId$ = this.route.paramMap.pipe(map(params => params.get('id') as string));
   protected readonly instanceId = toSignal(this.paramId$, { initialValue: '' });
@@ -75,7 +70,7 @@ export class InstanceDetail implements OnInit {
 
   private readonly paramIdSub = this.paramId$
     .pipe(takeUntilDestroyed())
-    .subscribe(id => this.loadBlocks(id));
+    .subscribe(id => this.instanceDetailStore.loadBlocks({ instanceId: id }));
 
   protected readonly breakPoints = toSignal(this.breakpointObserver.observe([
     Breakpoints.XLarge,
@@ -112,12 +107,4 @@ export class InstanceDetail implements OnInit {
       return 'col-4';
     }
   });
-
-  ngOnInit() {
-    this.instanceDetailStore.setup();
-  }
-
-  loadBlocks(instanceId: string) {
-    this.instanceDetailStore.loadBlocks({ instanceId });
-  }
 }

@@ -19,7 +19,9 @@ type State = {
   lastPage: boolean;
 };
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class InstanceListStore implements OnDestroy {
   private readonly instanceListDataClient = inject(InstanceListDataClient);
 
@@ -69,7 +71,7 @@ export class InstanceListStore implements OnDestroy {
     ),
   );
 
-  setup() {
+  constructor() {
     this.loadInstances(this.state.params);
   }
 

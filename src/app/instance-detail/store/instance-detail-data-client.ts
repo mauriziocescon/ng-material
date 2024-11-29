@@ -1,19 +1,21 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable, throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { AppConstants } from '../../core/app-constants';
 
 import { Block } from '../../shared/block';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class InstanceDetailDataClient {
-  private http = inject(HttpClient);
-  private appConstants = inject(AppConstants);
+  private readonly http = inject(HttpClient);
+  private readonly appConstants = inject(AppConstants);
 
-  getBlocks(instanceId: string): Observable<Block<unknown>[]> {
+  getBlocks(instanceId: string) {
     const options = { params: { instanceId } };
 
     return this.http
@@ -24,7 +26,7 @@ export class InstanceDetailDataClient {
       );
   }
 
-  syncBlocks(instanceId: string, blocks: Block<unknown>[]): Observable<Block<unknown>[]> {
+  syncBlocks(instanceId: string, blocks: Block<unknown>[]) {
     const body = { instanceId, blocks };
 
     return this.http
@@ -35,7 +37,7 @@ export class InstanceDetailDataClient {
       );
   }
 
-  private handleError(err: HttpErrorResponse): Observable<never> {
+  private handleError(err: HttpErrorResponse) {
     if (err.status === 0) {
       // A client-side or network error occurred
       return throwError(() => err.error);

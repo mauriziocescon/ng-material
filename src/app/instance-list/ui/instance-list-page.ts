@@ -72,7 +72,6 @@ export class InstanceListPage implements OnInit {
   });
 
   ngOnInit() {
-    this.instanceListStore.setup();
     this.textSearchDidChange('');
   }
 

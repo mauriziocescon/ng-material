@@ -25,7 +25,9 @@ type State = {
   syncError: string | undefined;
 };
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class InstanceDetailStore implements OnDestroy {
   private readonly instanceDetail = inject(InstanceDetailDataClient);
 
@@ -89,7 +91,7 @@ export class InstanceDetailStore implements OnDestroy {
     ),
   );
 
-  setup() {
+  constructor() {
     this.loadBlocksSub(this.state.loadParams);
     this.syncBlocksSub(this.state.syncParams);
   }

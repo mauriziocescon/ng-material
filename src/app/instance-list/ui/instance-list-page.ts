@@ -68,17 +68,7 @@ export class InstanceListPage implements OnInit {
 
   private readonly errorWatcher = effect(() => {
     this.instanceListStore.error();
-    untracked(() => {
-      if (this.instanceListStore.error()) {
-        const modalAlert: ModalAlert = {
-          id: 'instanceListError',
-          title: this.transloco.translate('CONTAINER.INSTANCE_LIST.ALERT_TITLE'),
-          message: this.instanceListStore.error() as string,
-          buttonLabel: this.transloco.translate('CONTAINER.INSTANCE_LIST.ALERT_BUTTON'),
-        };
-        this.modalManager.alert(modalAlert);
-      }
-    });
+    untracked(() => this.showModalError());
   });
 
   ngOnInit() {
@@ -100,5 +90,17 @@ export class InstanceListPage implements OnInit {
     const textSearch = this.instanceListStore.textSearch();
     const pageNumber = this.instanceListStore.pageNumber();
     this.instanceListStore.updateParams({ textSearch, pageNumber });
+  }
+
+  private showModalError() {
+    if (this.instanceListStore.error()) {
+      const modalAlert: ModalAlert = {
+        id: 'instanceListError',
+        title: this.transloco.translate('CONTAINER.INSTANCE_LIST.ALERT_TITLE'),
+        message: this.instanceListStore.error() as string,
+        buttonLabel: this.transloco.translate('CONTAINER.INSTANCE_LIST.ALERT_BUTTON'),
+      };
+      this.modalManager.alert(modalAlert);
+    }
   }
 }

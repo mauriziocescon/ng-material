@@ -1,4 +1,4 @@
-import { Directive, effect, ElementRef, inject, input, OnInit, Renderer2 } from '@angular/core';
+import { afterRenderEffect, Directive, ElementRef, inject, input, OnInit, Renderer2, untracked } from '@angular/core';
 
 @Directive({
   selector: '[appValidityState]',
@@ -9,7 +9,16 @@ export class ValidityState implements OnInit {
 
   readonly valid = input.required<boolean>();
 
-  private readonly validWatcher = effect(() => {
+  private readonly validWatcher = afterRenderEffect(() => {
+    this.valid();
+    untracked(() => this.manageSymbols());
+  });
+
+  ngOnInit() {
+    this.renderer.addClass(this.el.nativeElement, 'bi');
+  }
+
+  private manageSymbols() {
     if (this.valid() === true) {
       this.removeInvalidSymbol();
       this.addValidSymbol();
@@ -17,10 +26,6 @@ export class ValidityState implements OnInit {
       this.removeValidSymbol();
       this.addInvalidSymbol();
     }
-  });
-
-  ngOnInit() {
-    this.renderer.addClass(this.el.nativeElement, 'bi');
   }
 
   private addValidSymbol() {

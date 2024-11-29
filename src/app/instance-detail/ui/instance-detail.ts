@@ -1,14 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  inject,
-  OnDestroy,
-  OnInit,
-  signal,
-  untracked,
-} from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, OnInit } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
@@ -81,10 +72,8 @@ export class InstanceDetail implements OnInit, OnDestroy {
   private readonly paramId$ = this.route.paramMap.pipe(map(params => params.get('id') as string));
   protected readonly instanceId = toSignal(this.paramId$, { initialValue: '' });
 
-  canDeactivate = true;
+  canDeactivate = toObservable(this.instanceDetailStore.isSyncRequired).pipe(map(v => !v));
 
-  protected readonly nextStep = signal('');
-  protected readonly blockList = signal('');
   protected readonly breakPoints = toSignal(this.breakpointObserver.observe([
     Breakpoints.XLarge,
     Breakpoints.Large,
@@ -92,32 +81,33 @@ export class InstanceDetail implements OnInit, OnDestroy {
     Breakpoints.XSmall,
   ]), { initialValue: { matches: false, breakpoints: {} } as BreakpointState });
 
-  private readonly breakpointWatcher = effect(() => {
-    this.breakPoints();
-    untracked(() => {
-      const state = this.breakPoints();
-      if (state.breakpoints[Breakpoints.XLarge]) {
-        this.nextStep.set('col-2');
-        this.blockList.set('col-10');
-      } else if (state.breakpoints[Breakpoints.Large]) {
-        this.nextStep.set('col-2');
-        this.blockList.set('col-10');
-      } else if (state.breakpoints[Breakpoints.Small]) {
-        this.nextStep.set('col-12');
-        this.blockList.set('col-12');
-      } else if (state.breakpoints[Breakpoints.XSmall]) {
-        this.nextStep.set('col-12');
-        this.blockList.set('col-12');
-      } else {
-        this.nextStep.set('col-4');
-        this.blockList.set('col-8');
-      }
-    });
+  protected readonly blockList = computed(() => {
+    const state = this.breakPoints();
+    if (state.breakpoints[Breakpoints.XLarge]) {
+      return 'col-10';
+    } else if (state.breakpoints[Breakpoints.Large]) {
+      return 'col-10';
+    } else if (state.breakpoints[Breakpoints.Small]) {
+      return 'col-12';
+    } else if (state.breakpoints[Breakpoints.XSmall]) {
+      return 'col-12';
+    } else {
+      return 'col-8';
+    }
   });
-
-  private readonly syncRequiredWatcher = effect(() => {
-    this.instanceDetailStore.isSyncRequired();
-    untracked(() => this.canDeactivate = !this.instanceDetailStore.isSyncRequired());
+  protected readonly nextStep = computed(() => {
+    const state = this.breakPoints();
+    if (state.breakpoints[Breakpoints.XLarge]) {
+      return 'col-2';
+    } else if (state.breakpoints[Breakpoints.Large]) {
+      return 'col-2';
+    } else if (state.breakpoints[Breakpoints.Small]) {
+      return 'col-12';
+    } else if (state.breakpoints[Breakpoints.XSmall]) {
+      return 'col-12';
+    } else {
+      return 'col-4';
+    }
   });
 
   ngOnInit() {

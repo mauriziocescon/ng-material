@@ -70,11 +70,7 @@ export class BlockList implements OnDestroy {
 
   private readonly instanceIdWatcher = effect(() => {
     this.instanceId();
-    untracked(() => {
-      if (this.instanceId()) {
-        this.reloadList();
-      }
-    });
+    untracked(() => this.reloadList());
   });
 
   private readonly errorWatcher = effect(() => {

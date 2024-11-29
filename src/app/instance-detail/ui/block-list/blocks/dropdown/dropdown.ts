@@ -7,6 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
+import isEqual from 'lodash/isEqual';
+
 import { ValidityState } from '../../../../../shared/validity-state';
 
 import { InstanceDetailStore } from '../../../../store/instance-detail-store';
@@ -62,7 +64,7 @@ export class Dropdown {
   protected readonly disabled = computed(() => this.block().disabled);
   protected readonly required = computed(() => this.block().required);
   protected readonly label = computed(() => this.block().label);
-  protected readonly choices = computed(() => this.block().choices);
+  protected readonly choices = computed(() => this.block().choices, { equal: isEqual });
   protected readonly valid = computed(() => this.block().valid);
 
   valueDidChange() {

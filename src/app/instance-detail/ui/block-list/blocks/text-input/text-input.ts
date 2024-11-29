@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
 import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
 
 import { ValidityState } from '../../../../../shared/validity-state';
 
@@ -85,11 +86,11 @@ export class TextInput {
     const maxLength = this.block().maxLength ?? -1;
 
     if (minLength >= 0 && maxLength >= 0) {
-      return 'COMPONENT.TEXT_INPUT.TEXT_INPUT_MSG_MIN_MAX_LENGTH';
+      return `COMPONENT.TEXT_INPUT.TEXT_INPUT_MSG_MIN_MAX_LENGTH`;
     } else if (minLength >= 0) {
-      return 'COMPONENT.TEXT_INPUT.TEXT_INPUT_MSG_MIN_LENGTH';
+      return `COMPONENT.TEXT_INPUT.TEXT_INPUT_MSG_MIN_LENGTH`;
     } else if (maxLength >= 0) {
-      return 'COMPONENT.TEXT_INPUT.TEXT_INPUT_MSG_MAX_LENGTH';
+      return `COMPONENT.TEXT_INPUT.TEXT_INPUT_MSG_MAX_LENGTH`;
     } else {
       return ``;
     }
@@ -98,7 +99,7 @@ export class TextInput {
     const minLength = this.block().minLength ?? -1;
     const maxLength = this.block().maxLength ?? -1;
     return { minLength, maxLength };
-  });
+  }, { equal: isEqual });
 
   resetTextInput() {
     this.value.set(null);

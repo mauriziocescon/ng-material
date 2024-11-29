@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  OnDestroy,
-  untracked,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, untracked } from '@angular/core';
 
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
@@ -53,7 +44,7 @@ import { BlockCompGenerator } from './blocks/block-comp-generator';
       padding-bottom: var(--padding-m);
     }`,
 })
-export class BlockList implements OnDestroy {
+export class BlockList {
   private readonly transloco = inject(TranslocoService);
   private readonly modalManager = inject(ModalManager);
   protected readonly instanceDetailStore = inject(InstanceDetailStore);
@@ -77,10 +68,6 @@ export class BlockList implements OnDestroy {
     this.error();
     untracked(() => this.showModalError());
   });
-
-  ngOnDestroy() {
-    this.instanceDetailStore.reset();
-  }
 
   reloadList() {
     this.instanceDetailStore.loadBlocks({ instanceId: this.instanceId() });

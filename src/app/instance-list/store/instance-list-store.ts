@@ -8,6 +8,7 @@ import { tapResponse } from '@ngrx/operators';
 import { Instance } from '../models/instance';
 
 import { InstanceListDataClient } from './instance-list-data-client';
+import { filter } from 'rxjs/operators';
 
 type State = {
   params: { textSearch: string | undefined, pageNumber: number };
@@ -46,14 +47,15 @@ export class InstanceListStore implements OnDestroy {
 
   private readonly loadInstances = rxMethod<{ textSearch: string | undefined, pageNumber: number }>(
     pipe(
+      filter(({ textSearch }) => textSearch !== undefined),
       tap(({ pageNumber }) => {
         if (pageNumber === 1) {
           patchState(this.state, { instances: [] });
         }
       }),
-      tap(({ pageNumber }) => patchState(this.state, { loading: true, error: undefined })),
-      switchMap(({ textSearch, pageNumber }) => {
-        return this.instanceListDataClient.getInstances(textSearch, pageNumber).pipe(
+      tap(() => patchState(this.state, { loading: true, error: undefined })),
+      switchMap(({ textSearch, pageNumber }) => this.instanceListDataClient.getInstances(textSearch, pageNumber)
+        .pipe(
           tapResponse({
             next: data => patchState(this.state, {
               instances: [...this.state.instances(), ...data.instances],
@@ -62,8 +64,8 @@ export class InstanceListStore implements OnDestroy {
             error: (err: string) => patchState(this.state, ({ error: err })),
             finalize: () => patchState(this.state, { loading: false }),
           }),
-        );
-      }),
+        ),
+      ),
     ),
   );
 

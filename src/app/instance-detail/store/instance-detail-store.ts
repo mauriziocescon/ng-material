@@ -97,6 +97,7 @@ export class InstanceDetailStore implements OnDestroy {
   ngOnDestroy() {
     this.loadBlocksSub?.unsubscribe();
     this.syncBlocksSub?.unsubscribe();
+    this.reset();
   }
 
   loadBlocks(data: { instanceId: string }) {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
@@ -63,7 +63,7 @@ import { NextStep } from './next-step/next-step';
       width: 100%;
     }`,
 })
-export class InstanceDetail implements OnInit, OnDestroy {
+export class InstanceDetail implements OnInit {
   private route = inject(ActivatedRoute);
   private breakpointObserver = inject(BreakpointObserver);
   private instanceDetailStore = inject(InstanceDetailStore);
@@ -111,9 +111,5 @@ export class InstanceDetail implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.instanceDetailStore.setup();
-  }
-
-  ngOnDestroy() {
-    this.instanceDetailStore.reset();
   }
 }

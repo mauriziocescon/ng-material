@@ -80,6 +80,6 @@ export class InstanceListStore implements OnDestroy {
   }
 
   updateParams(params: { textSearch: string | undefined, pageNumber: number }) {
-    patchState(this.state, () => ({ params: { ...params } }));
+    patchState(this.state, { params: { ...params } });
   }
 }

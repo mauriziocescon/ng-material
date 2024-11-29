@@ -61,13 +61,13 @@ export class InstanceDetailStore implements OnDestroy {
   private readonly loadBlocksSub = rxMethod<{ instanceId: string | undefined }>(
     pipe(
       filter(({ instanceId }) => instanceId !== undefined),
-      tap(() => patchState(this.state, () => ({ loadedBlocks: [], loadOngoing: true, loadError: undefined }))),
+      tap(() => patchState(this.state, { loadedBlocks: [], loadOngoing: true, loadError: undefined })),
       switchMap(({ instanceId }) => this.instanceDetail.getBlocks(instanceId as string)
         .pipe(
           tapResponse({
-            next: data => patchState(this.state, state => ({ loadedBlocks: data, blocks: cloneDeep(data) })),
-            error: (err: string) => patchState(this.state, state => ({ loadError: err })),
-            finalize: () => patchState(this.state, state => ({ loadOngoing: false })),
+            next: data => patchState(this.state, { loadedBlocks: data, blocks: cloneDeep(data) }),
+            error: (err: string) => patchState(this.state, { loadError: err }),
+            finalize: () => patchState(this.state, { loadOngoing: false }),
           }),
         ),
       ),
@@ -77,14 +77,14 @@ export class InstanceDetailStore implements OnDestroy {
   private readonly syncBlocksSub = rxMethod<{ instanceId: string | undefined }>(
     pipe(
       filter(({ instanceId }) => instanceId !== undefined),
-      tap(() => patchState(this.state, () => ({ syncOngoing: true, syncError: undefined }))),
+      tap(() => patchState(this.state, { syncOngoing: true, syncError: undefined })),
       debounceTime(3000),
       switchMap(({ instanceId }) => this.instanceDetail.syncBlocks(instanceId as string, this.state.blocks())
         .pipe(
           tapResponse({
-            next: data => patchState(this.state, () => ({ blocks: data, syncParams: { instanceId: undefined } })),
-            error: (err: string) => patchState(this.state, () => ({ syncError: err })),
-            finalize: () => patchState(this.state, state => ({ syncOngoing: false })),
+            next: data => patchState(this.state, { blocks: data, syncParams: { instanceId: undefined } }),
+            error: (err: string) => patchState(this.state, { syncError: err }),
+            finalize: () => patchState(this.state, { syncOngoing: false }),
           }),
         ),
       ),
@@ -118,6 +118,6 @@ export class InstanceDetailStore implements OnDestroy {
   }
 
   syncBlocks(data: { instanceId: string }) {
-    patchState(this.state, () => ({ syncParams: { instanceId: data.instanceId } }));
+    patchState(this.state, { syncParams: { instanceId: data.instanceId } });
   }
 }

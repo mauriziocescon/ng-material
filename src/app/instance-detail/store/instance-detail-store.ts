@@ -59,7 +59,7 @@ export class InstanceDetailStore implements OnDestroy {
   private readonly loadBlocksSub = rxMethod<{ instanceId: string | undefined }>(
     pipe(
       filter(({ instanceId }) => instanceId !== undefined),
-      tap(() => patchState(this.state, { loadedBlocks: [], loadOngoing: true, loadError: undefined })),
+      tap(() => patchState(this.state, { loadOngoing: true, loadError: undefined })),
       switchMap(({ instanceId }) => this.instanceDetail.getBlocks(instanceId as string)
         .pipe(
           tapResponse({

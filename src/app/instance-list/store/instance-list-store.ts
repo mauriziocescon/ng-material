@@ -5,7 +5,7 @@ import { patchState, signalState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
 
-import { Instance } from '../models/instance';
+import { Instance } from '../model/instance';
 
 import { InstanceListDataClient } from './instance-list-data-client';
 import { filter } from 'rxjs/operators';

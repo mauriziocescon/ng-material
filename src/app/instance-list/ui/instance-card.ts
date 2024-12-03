@@ -7,7 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 
 import { ValidityState } from '../../shared/validity-state';
 
-import { Instance } from '../models/instance';
+import { Instance } from '../model/instance';
 
 @Component({
   selector: 'app-instance-card',

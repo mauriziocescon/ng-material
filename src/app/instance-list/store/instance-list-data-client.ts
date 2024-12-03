@@ -6,7 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import { AppConstants } from '../../core/app-constants';
 
-import { Instance } from '../models/instance';
+import { Instance } from '../model/instance';
 
 @Injectable({
   providedIn: 'root',

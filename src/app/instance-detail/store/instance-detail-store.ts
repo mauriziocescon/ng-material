@@ -90,7 +90,7 @@ export class InstanceDetailStore {
     ),
   );
 
-  unregisterDestroy = this.destroyRef.onDestroy(() => {
+  private readonly unregisterDestroy = this.destroyRef.onDestroy(() => {
     this.loadBlocksSub?.unsubscribe();
     this.syncBlocksSub?.unsubscribe();
   });

@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, OnDestroy } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable } from '@angular/core';
 
 import { pipe } from 'rxjs';
 import { debounceTime, filter, switchMap, tap } from 'rxjs/operators';
@@ -26,7 +26,8 @@ type State = {
 @Injectable({
   providedIn: 'root',
 })
-export class InstanceDetailStore implements OnDestroy {
+export class InstanceDetailStore {
+  private readonly destroyRef = inject(DestroyRef);
   private readonly instanceDetail = inject(InstanceDetailDataClient);
 
   private readonly state = signalState<State>({
@@ -89,14 +90,14 @@ export class InstanceDetailStore implements OnDestroy {
     ),
   );
 
+  unregisterDestroy = this.destroyRef.onDestroy(() => {
+    this.loadBlocksSub?.unsubscribe();
+    this.syncBlocksSub?.unsubscribe();
+  });
+
   constructor() {
     this.loadBlocksSub(this.state.loadParams);
     this.syncBlocksSub(this.state.syncParams);
-  }
-
-  ngOnDestroy() {
-    this.loadBlocksSub?.unsubscribe();
-    this.syncBlocksSub?.unsubscribe();
   }
 
   loadBlocks(data: { instanceId: string }) {

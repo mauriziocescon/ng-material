@@ -1,6 +1,7 @@
-import { computed, inject, Injectable, OnDestroy } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable } from '@angular/core';
 
-import { pipe, switchMap, tap } from 'rxjs';
+import { pipe } from 'rxjs';
+import { filter, switchMap, tap } from 'rxjs/operators';
 import { patchState, signalState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
@@ -8,7 +9,6 @@ import { tapResponse } from '@ngrx/operators';
 import { Instance } from '../model/instance';
 
 import { InstanceListDataClient } from './instance-list-data-client';
-import { filter } from 'rxjs/operators';
 
 type State = {
   params: { textSearch: string | undefined, pageNumber: number };
@@ -22,7 +22,8 @@ type State = {
 @Injectable({
   providedIn: 'root',
 })
-export class InstanceListStore implements OnDestroy {
+export class InstanceListStore {
+  private readonly destroyRef = inject(DestroyRef);
   private readonly instanceListDataClient = inject(InstanceListDataClient);
 
   private readonly state = signalState<State>({
@@ -71,12 +72,10 @@ export class InstanceListStore implements OnDestroy {
     ),
   );
 
+  unregisterDestroy = this.destroyRef.onDestroy(() => this.loadInstances?.unsubscribe());
+
   constructor() {
     this.loadInstances(this.state.params);
-  }
-
-  ngOnDestroy() {
-    this.loadInstances?.unsubscribe();
   }
 
   updateParams(params: { textSearch: string | undefined, pageNumber: number }) {

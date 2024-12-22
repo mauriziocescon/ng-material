@@ -72,7 +72,7 @@ export class InstanceListStore {
     ),
   );
 
-  private readonly unregisterDestroy = this.destroyRef.onDestroy(() => this.loadInstances?.unsubscribe());
+  private readonly unregisterDestroy = this.destroyRef.onDestroy(() => this.loadInstances?.destroy());
 
   constructor() {
     this.loadInstances(this.state.params);

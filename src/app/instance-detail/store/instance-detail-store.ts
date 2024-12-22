@@ -91,8 +91,8 @@ export class InstanceDetailStore {
   );
 
   private readonly unregisterDestroy = this.destroyRef.onDestroy(() => {
-    this.loadBlocksSub?.unsubscribe();
-    this.syncBlocksSub?.unsubscribe();
+    this.loadBlocksSub?.destroy();
+    this.syncBlocksSub?.destroy();
   });
 
   constructor() {

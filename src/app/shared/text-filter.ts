@@ -25,7 +25,7 @@ import { MatInputModule } from '@angular/material/input';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <mat-form-field appearance="outline" class="search-field">
-      <mat-label>{{ 'COMPONENT.TEXT_FILTER.PLACEHOLDER' | transloco }}</mat-label>
+      <mat-label>{{ 'TEXT_FILTER.PLACEHOLDER' | transloco }}</mat-label>
       <input
         type="text"
         matInput

@@ -27,7 +27,7 @@ import { CheckBoxBlock } from './check-box-block';
     <mat-card>
       <mat-card-header>
         <mat-card-title>
-          <div class="card-title">{{ "COMPONENT.CHECK_BOX.HEADER" | transloco }}</div>
+          <div class="card-title">{{ "CHECK_BOX.HEADER" | transloco }}</div>
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>

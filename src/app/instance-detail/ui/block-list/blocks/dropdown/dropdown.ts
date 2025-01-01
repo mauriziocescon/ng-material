@@ -32,7 +32,7 @@ import { DropdownBlock } from './dropdown-block';
     <mat-card>
       <mat-card-header>
         <mat-card-title>
-          <div class="card-title">{{ "COMPONENT.DROPDOWN.HEADER" | transloco }}</div>
+          <div class="card-title">{{ "DROPDOWN.HEADER" | transloco }}</div>
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>

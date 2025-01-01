@@ -14,11 +14,11 @@ import { MatCardModule } from '@angular/material/card';
     <mat-card>
       <mat-card-header>
         <mat-card-title>
-          <div class="card-title">{{ "COMPONENT.UNKNOWN.HEADER" | transloco }}</div>
+          <div class="card-title">{{ "UNKNOWN.HEADER" | transloco }}</div>
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        {{ "COMPONENT.UNKNOWN.ALERT_MSG" | transloco }}
+        {{ "UNKNOWN.ALERT_MSG" | transloco }}
       </mat-card-content>
     </mat-card>`,
 })

@@ -25,15 +25,15 @@ import { BlockCompGenerator } from './blocks/block-comp-generator';
           <app-block-comp-generator [instanceId]="instanceId()" [block]="block"/>
         </div>
       }
-      <div class="full-width-message">{{ "COMPONENT.BLOCK_LIST.LOAD_COMPLETED" | transloco }}</div>
+      <div class="full-width-message">{{ "BLOCK_LIST.LOAD_COMPLETED" | transloco }}</div>
     }
 
     @if (isLoading()) {
-      <div class="full-width-message"> {{ "COMPONENT.BLOCK_LIST.LOADING" | transloco }}</div>
+      <div class="full-width-message"> {{ "BLOCK_LIST.LOADING" | transloco }}</div>
     } @else if (hasNoData()) {
-      <div class="full-width-message"> {{ "COMPONENT.BLOCK_LIST.NO_RESULT" | transloco }}</div>
+      <div class="full-width-message"> {{ "BLOCK_LIST.NO_RESULT" | transloco }}</div>
     } @else if (shouldRetry()) {
-      <div class="full-width-message" (click)="reloadList()"> {{ "COMPONENT.BLOCK_LIST.RETRY" | transloco }}</div>
+      <div class="full-width-message" (click)="reloadList()"> {{ "BLOCK_LIST.RETRY" | transloco }}</div>
     }
     <app-scroll-to-top/>`,
   styles: `
@@ -72,9 +72,9 @@ export class BlockList {
     if (this.error()) {
       const modalAlert: ModalAlert = {
         id: 'blockListError',
-        title: this.transloco.translate('CONTAINER.BLOCK_LIST.ALERT_TITLE'),
+        title: this.transloco.translate('BLOCK_LIST.ALERT_TITLE'),
         message: this.error() as string,
-        buttonLabel: this.transloco.translate('CONTAINER.BLOCK_LIST.ALERT_BUTTON'),
+        buttonLabel: this.transloco.translate('BLOCK_LIST.ALERT_BUTTON'),
       };
       this.modalManager.alert(modalAlert);
     }

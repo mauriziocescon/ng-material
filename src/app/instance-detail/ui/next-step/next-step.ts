@@ -24,7 +24,7 @@ import { InstanceDetailStore } from '../../store/instance-detail-store';
     <div class="next-step">
       <mat-card>
         <mat-card-header>
-          <mat-card-title>{{ "COMPONENT.NEXT_STEP.HEADER" | transloco }}</mat-card-title>
+          <mat-card-title>{{ "NEXT_STEP.HEADER" | transloco }}</mat-card-title>
         </mat-card-header>
         <mat-card-actions>
           <div class="action-btns">
@@ -33,23 +33,23 @@ import { InstanceDetailStore } from '../../store/instance-detail-store';
               color="primary"
               (click)="moveToNextStep()"
               [disabled]="!instanceDetailStore.isNextStepEnable()">
-              {{ "COMPONENT.NEXT_STEP.NEXT_STEP" | transloco }}
+              {{ "NEXT_STEP.NEXT_STEP" | transloco }}
             </button>
 
             @if (isSynchronized()) {
               <div>
                 <mat-icon>done</mat-icon>
-                <span>{{ "COMPONENT.NEXT_STEP.SYNC" | transloco }}</span>
+                <span>{{ "NEXT_STEP.SYNC" | transloco }}</span>
               </div>
             } @else if (instanceDetailStore.isSyncingBlocks()) {
               <div>
                 <mat-icon>sync</mat-icon>
-                <span>{{ "COMPONENT.NEXT_STEP.SYNCING" | transloco }}</span>
+                <span>{{ "NEXT_STEP.SYNCING" | transloco }}</span>
               </div>
             } @else if (canRetrySync()) {
               <div (click)="retrySynchronization()">
                 <mat-icon>redo</mat-icon>
-                <span>{{ "COMPONENT.NEXT_STEP.RETRY" | transloco }}</span>
+                <span>{{ "NEXT_STEP.RETRY" | transloco }}</span>
               </div>
             }
           </div>
@@ -105,9 +105,9 @@ export class NextStep {
     if (this.instanceDetailStore.syncingError()) {
       const modalAlert: ModalAlert = {
         id: 'blockListError',
-        title: this.transloco.translate('CONTAINER.BLOCK_LIST.ALERT_TITLE'),
+        title: this.transloco.translate('BLOCK_LIST.ALERT_TITLE'),
         message: this.instanceDetailStore.syncingError() as string,
-        buttonLabel: this.transloco.translate('CONTAINER.BLOCK_LIST.ALERT_BUTTON'),
+        buttonLabel: this.transloco.translate('BLOCK_LIST.ALERT_BUTTON'),
       };
       this.modalManager.alert(modalAlert);
     }

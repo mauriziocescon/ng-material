@@ -22,9 +22,9 @@ import { AppLanguage } from '../core/app-language';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <mat-toolbar color="primary">
-      <span>{{ "COMPONENT.NAVIGATION_BAR.NAME" | transloco }}</span>
+      <span>{{ "NAVIGATION_BAR.NAME" | transloco }}</span>
       <button mat-button aria-label="go to instances" (click)="goToInstanceList()">
-        {{ "COMPONENT.NAVIGATION_BAR.INSTANCES" | transloco }}
+        {{ "NAVIGATION_BAR.INSTANCES" | transloco }}
       </button>
 
       <span class="spacer"></span>

@@ -30,7 +30,7 @@ import { Instance } from '../model/instance';
       <mat-card-content>{{ bodyText() }}</mat-card-content>
       <mat-card-actions align="end">
         <button mat-button color="primary" (click)="selectInstance()">
-          {{ "COMPONENT.INSTANCE.SHOW" | transloco }}
+          {{ "INSTANCE.SHOW" | transloco }}
         </button>
       </mat-card-actions>
     </mat-card>`,

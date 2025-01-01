@@ -34,7 +34,7 @@ import { TextInputBlock } from './text-input-block';
     <mat-card>
       <mat-card-header>
         <mat-card-title>
-          <div class="card-title">{{ "COMPONENT.TEXT_INPUT.HEADER" | transloco }}</div>
+          <div class="card-title">{{ "TEXT_INPUT.HEADER" | transloco }}</div>
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
@@ -47,7 +47,7 @@ import { TextInputBlock } from './text-input-block';
             (ngModelChange)="valueDidChange()"
             [disabled]="disabled()"
             [required]="required()"
-            placeholder="{{ 'COMPONENT.TEXT_INPUT.TEXT_INPUT_PLACEHOLDER' | transloco }}"/>
+            placeholder="{{ 'TEXT_INPUT.TEXT_INPUT_PLACEHOLDER' | transloco }}"/>
           @if (isNotEmpty()) {
             <button matSuffix mat-icon-button aria-label="Clear" (click)="resetTextInput()">
               <mat-icon>close</mat-icon>
@@ -86,11 +86,11 @@ export class TextInput {
     const maxLength = this.block().maxLength ?? -1;
 
     if (minLength >= 0 && maxLength >= 0) {
-      return `COMPONENT.TEXT_INPUT.TEXT_INPUT_MSG_MIN_MAX_LENGTH`;
+      return `TEXT_INPUT.TEXT_INPUT_MSG_MIN_MAX_LENGTH`;
     } else if (minLength >= 0) {
-      return `COMPONENT.TEXT_INPUT.TEXT_INPUT_MSG_MIN_LENGTH`;
+      return `TEXT_INPUT.TEXT_INPUT_MSG_MIN_LENGTH`;
     } else if (maxLength >= 0) {
-      return `COMPONENT.TEXT_INPUT.TEXT_INPUT_MSG_MAX_LENGTH`;
+      return `TEXT_INPUT.TEXT_INPUT_MSG_MAX_LENGTH`;
     } else {
       return ``;
     }

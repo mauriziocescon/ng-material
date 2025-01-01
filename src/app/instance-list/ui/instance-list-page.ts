@@ -42,13 +42,13 @@ import { InstanceCard } from './instance-card';
       }
 
       @if (instanceListStore.loading()) {
-        <div class="full-width-message"> {{ "COMPONENT.INSTANCE_LIST.LOADING" | transloco }}</div>
+        <div class="full-width-message"> {{ "INSTANCE_LIST.LOADING" | transloco }}</div>
       } @else if (instanceListStore.hasNoData()) {
-        <div class="full-width-message"> {{ "COMPONENT.INSTANCE_LIST.NO_RESULT" | transloco }}</div>
+        <div class="full-width-message"> {{ "INSTANCE_LIST.NO_RESULT" | transloco }}</div>
       } @else if (instanceListStore.isLoadCompleted()) {
-        <div class="full-width-message"> {{ "COMPONENT.INSTANCE_LIST.LOAD_COMPLETED" | transloco }}</div>
+        <div class="full-width-message"> {{ "INSTANCE_LIST.LOAD_COMPLETED" | transloco }}</div>
       } @else if (instanceListStore.shouldRetry()) {
-        <div class="full-width-message" (click)="loadList()"> {{ "COMPONENT.INSTANCE_LIST.RETRY" | transloco }}</div>
+        <div class="full-width-message" (click)="loadList()"> {{ "INSTANCE_LIST.RETRY" | transloco }}</div>
       }
       <app-scroll-to-top/>
 
@@ -95,9 +95,9 @@ export class InstanceListPage implements OnInit {
     if (this.instanceListStore.error()) {
       const modalAlert: ModalAlert = {
         id: 'instanceListError',
-        title: this.transloco.translate('CONTAINER.INSTANCE_LIST.ALERT_TITLE'),
+        title: this.transloco.translate('INSTANCE_LIST.ALERT_TITLE'),
         message: this.instanceListStore.error() as string,
-        buttonLabel: this.transloco.translate('CONTAINER.INSTANCE_LIST.ALERT_BUTTON'),
+        buttonLabel: this.transloco.translate('INSTANCE_LIST.ALERT_BUTTON'),
       };
       this.modalManager.alert(modalAlert);
     }

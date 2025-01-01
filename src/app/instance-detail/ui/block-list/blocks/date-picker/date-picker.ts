@@ -33,7 +33,7 @@ import { DatePickerBlock } from './date-picker-block';
     <mat-card>
       <mat-card-header>
         <mat-card-title>
-          <div class="card-title">{{ "COMPONENT.DATE_PICKER.HEADER" | transloco }}</div>
+          <div class="card-title">{{ "DATE_PICKER.HEADER" | transloco }}</div>
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>

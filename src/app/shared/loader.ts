@@ -8,7 +8,7 @@ import { NgTemplateOutlet } from '@angular/common';
     NgTemplateOutlet,
   ],
   template: `
-    @if (loading()) {
+    @if (isLoading()) {
       <div class="spinner"></div>
     }
     <ng-container [ngTemplateOutlet]="content()"/>`,
@@ -72,7 +72,10 @@ import { NgTemplateOutlet } from '@angular/common';
 })
 export class Loader {
   readonly content = input.required<TemplateRef<unknown>>();
-  readonly loading = input.required({ transform: booleanAttribute });
 
-  protected readonly hostCssClasses = computed(() => this.loading() ? `loader` : ``);
+  readonly isLoading = input.required({ transform: booleanAttribute });
+  readonly hasNoData = input.required({ transform: booleanAttribute });
+  readonly shouldRetry = input.required({ transform: booleanAttribute });
+
+  protected readonly hostCssClasses = computed(() => this.isLoading() ? `loader` : ``);
 }

@@ -1,87 +1,73 @@
 {
-  "COMPONENT": {
-    "NAVIGATION_BAR": {
-      "INSTANCES": "*** Instances ***",
-      "NAME": "Ng Material",
-      "SELECT_LANGUAGE": "Sprache ӓndern"
-    },
-    "TEXT_FILTER": {
-      "PLACEHOLDER": "Text eingeben"
-    },
-    "INSTANCE_LIST": {
-      "LOAD_COMPLETED": "Ladevorgang abgeschlossen",
-      "LOADING": "Daten werden geladen",
-      "NO_RESULT": "Leer",
-      "RETRY": "Erneut versuchen"
-    },
-    "INSTANCE": {
-      "SHOW": "Show"
-    },
-    "INSTANCE_DETAIL": {
-    },
-    "NEXT_STEP": {
-      "HEADER": "*** Validation ***",
-      "NEXT_STEP": "*** Next step ***",
-      "RETRY": "Retry",
-      "SYNC": "*** Syncronized ***",
-      "SYNCING": "*** Sync... ***"
-    },
-    "BLOCK_LIST": {
-      "LOAD_COMPLETED": "Ladevorgang abgeschlossen",
-      "LOADING": "Daten werden geladen",
-      "NO_RESULT": "Leer",
-      "RETRY": "Erneut versuchen"
-    },
-    "UNKNOWN": {
-      "ALERT_MSG": "*** Unknown component ***",
-      "HEADER": "*** Unknown ***"
-    },
-    "CHECK_BOX": {
-      "CHECK_BOX_DESC": "*** I have checked all documents ***",
-      "CHECK_BOX_LABEL": "*** Contract ***",
-      "HEADER": "*** CheckBox ***"
-    },
-    "CHECK_BOX_CONFIRMER": {
-      "CHECK_BOX_CONFIRMER_DESC": "*** I have checked all documents ***",
-      "CHECK_BOX_CONFIRMER_LABEL": "*** Contract ***",
-      "HEADER": "*** CheckBox Confirmer ***"
-    },
-    "DATE_PICKER": {
-      "DATE_PICKER_LABEL": "*** Select date ***",
-      "HEADER": "*** DatePicker ***"
-    },
-    "DROPDOWN": {
-      "DROPDOWN_LABEL": "*** Select the position you want ***",
-      "HEADER": "*** Dropdown ***"
-    },
-    "TEXT_INPUT": {
-      "HEADER": "*** TextInput ***",
-      "TEXT_INPUT_LABEL": "*** Type some reasons ***",
-      "TEXT_INPUT_MSG_MAX_LENGTH": "*** Length must be <= {{ maxLength }} ***",
-      "TEXT_INPUT_MSG_MIN_LENGTH": "*** Length must be >= {{ minLength }} ***",
-      "TEXT_INPUT_MSG_MIN_MAX_LENGTH": "*** Length must be beetwen {{ minLength }} and {{ maxLength }} ***",
-      "TEXT_INPUT_PLACEHOLDER": "*** Type some text ***"
-    }
+  "NAVIGATION_BAR": {
+    "INSTANCES": "*** Instances ***",
+    "NAME": "Ng Material",
+    "SELECT_LANGUAGE": "Sprache ӓndern"
   },
-  "CONTAINER": {
-    "INSTANCE_LIST": {
-      "ALERT_BUTTON": "*** Ok ***",
-      "ALERT_TITLE": "*** Alert ***"
-    },
-    "NEXT_STEP": {
-      "ALERT_BUTTON": "*** Ok ***",
-      "ALERT_TITLE": "*** Alert ***",
-      "DONE": "*** Done ***"
-    },
-    "BLOCK_LIST": {
-      "ALERT_BUTTON": "*** Ok ***",
-      "ALERT_TITLE": "*** Alert ***"
-    },
-    "CHECK_BOX_CONFIRMER": {
-      "CONFIRMATION_MESSAGE": "*** Are you sure about that? ***",
-      "CONFIRMATION_NO_BUTTON": "*** No ***",
-      "CONFIRMATION_TITLE": "*** Confirmer ***",
-      "CONFIRMATION_YES_BUTTON": "*** Yes ***"
-    }
+  "TEXT_FILTER": {
+    "PLACEHOLDER": "Text eingeben"
+  },
+  "INSTANCE_LIST": {
+    "ALERT_BUTTON": "*** Ok ***",
+    "ALERT_TITLE": "*** Alert ***",
+    "LOADING": "Daten werden geladen",
+    "LOAD_COMPLETED": "Ladevorgang abgeschlossen",
+    "NO_RESULT": "Leer",
+    "RETRY": "Erneut versuchen"
+  },
+  "INSTANCE": {
+    "SHOW": "Show"
+  },
+  "NEXT_STEP": {
+    "ALERT_BUTTON": "*** Ok ***",
+    "ALERT_TITLE": "*** Alert ***",
+    "DONE": "*** Done ***",
+    "HEADER": "*** Validation ***",
+    "NEXT_STEP": "*** Next step ***",
+    "RETRY": "Retry",
+    "SYNC": "*** Syncronized ***",
+    "SYNCING": "*** Sync... ***"
+  },
+  "BLOCK_LIST": {
+    "ALERT_BUTTON": "*** Ok ***",
+    "ALERT_TITLE": "*** Alert ***",
+    "LOADING": "Daten werden geladen",
+    "LOAD_COMPLETED": "Ladevorgang abgeschlossen",
+    "NO_RESULT": "Leer",
+    "RETRY": "Erneut versuchen"
+  },
+  "CHECK_BOX": {
+    "CHECK_BOX_DESC": "*** I have checked all documents ***",
+    "CHECK_BOX_LABEL": "*** Contract ***",
+    "HEADER": "*** CheckBox ***"
+  },
+  "CHECK_BOX_CONFIRMER": {
+    "CHECK_BOX_CONFIRMER_DESC": "*** I have checked all documents ***",
+    "CHECK_BOX_CONFIRMER_LABEL": "*** Contract ***",
+    "CONFIRMATION_MESSAGE": "*** Are you sure about that? ***",
+    "CONFIRMATION_NO_BUTTON": "*** No ***",
+    "CONFIRMATION_TITLE": "*** Confirmer ***",
+    "CONFIRMATION_YES_BUTTON": "*** Yes ***",
+    "HEADER": "*** CheckBox Confirmer ***"
+  },
+  "DATE_PICKER": {
+    "DATE_PICKER_LABEL": "*** Select date ***",
+    "HEADER": "*** DatePicker ***"
+  },
+  "DROPDOWN": {
+    "DROPDOWN_LABEL": "*** Select the position you want ***",
+    "HEADER": "*** Dropdown ***"
+  },
+  "TEXT_INPUT": {
+    "HEADER": "*** TextInput ***",
+    "TEXT_INPUT_LABEL": "*** Type some reasons ***",
+    "TEXT_INPUT_MSG_MAX_LENGTH": "*** Length must be <= {{ maxLength }} ***",
+    "TEXT_INPUT_MSG_MIN_LENGTH": "*** Length must be >= {{ minLength }} ***",
+    "TEXT_INPUT_MSG_MIN_MAX_LENGTH": "*** Length must be beetwen {{ minLength }} and {{ maxLength }} ***",
+    "TEXT_INPUT_PLACEHOLDER": "*** Type some text ***"
+  },
+  "UNKNOWN": {
+    "ALERT_MSG": "*** Unknown component ***",
+    "HEADER": "*** Unknown ***"
   }
 }

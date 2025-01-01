@@ -28,7 +28,7 @@ import { CheckBoxConfirmerBlock } from './check-box-confirmer-block';
     <mat-card>
       <mat-card-header>
         <mat-card-title>
-          <div class="card-title">{{ "COMPONENT.CHECK_BOX_CONFIRMER.HEADER" | transloco }}</div>
+          <div class="card-title">{{ "CHECK_BOX_CONFIRMER.HEADER" | transloco }}</div>
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
@@ -80,10 +80,10 @@ export class CheckBoxConfirmer {
 
     this.modalSubscription = this.modalManager.confirmer({
       id: 'checkBoxConfirmer',
-      title: this.transloco.translate('CONTAINER.CHECK_BOX_CONFIRMER.CONFIRMATION_TITLE'),
-      message: this.transloco.translate('CONTAINER.CHECK_BOX_CONFIRMER.CONFIRMATION_MESSAGE'),
-      yesButtonLabel: this.transloco.translate('CONTAINER.CHECK_BOX_CONFIRMER.CONFIRMATION_YES_BUTTON'),
-      noButtonLabel: this.transloco.translate('CONTAINER.CHECK_BOX_CONFIRMER.CONFIRMATION_NO_BUTTON'),
+      title: this.transloco.translate('CHECK_BOX_CONFIRMER.CONFIRMATION_TITLE'),
+      message: this.transloco.translate('CHECK_BOX_CONFIRMER.CONFIRMATION_MESSAGE'),
+      yesButtonLabel: this.transloco.translate('CHECK_BOX_CONFIRMER.CONFIRMATION_YES_BUTTON'),
+      noButtonLabel: this.transloco.translate('CHECK_BOX_CONFIRMER.CONFIRMATION_NO_BUTTON'),
     })
       .subscribe(result => {
         if (result === true) {

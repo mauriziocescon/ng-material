@@ -51,7 +51,7 @@ import { InstanceCard } from './instance-card';
             </div>
           }
         </ng-template>
-        
+
       </app-loader>
 
       <app-scroll-to-top/>

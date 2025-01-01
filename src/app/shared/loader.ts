@@ -45,7 +45,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
         height: 100%;
         width: 100%;
         background-color: lightgrey;
-        opacity: 0.1;
+        opacity: 0.15;
         content: '';
         z-index: 5000;
       }

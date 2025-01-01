@@ -9,7 +9,7 @@ exports.getTextInput = (index) => {
     id: faker.datatype.uuid(),
     type: 'text-input',
     order: parseInt(index),
-    label: 'COMPONENT.TEXT_INPUT.TEXT_INPUT_LABEL',
+    label: 'TEXT_INPUT.TEXT_INPUT_LABEL',
     value: value,
     required: true,
     minLength: minLength,

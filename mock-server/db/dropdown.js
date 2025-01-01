@@ -7,7 +7,7 @@ exports.getDropdown = (index) => {
     id: faker.datatype.uuid(),
     type: 'dropdown',
     order: parseInt(index),
-    label: 'COMPONENT.DROPDOWN.DROPDOWN_LABEL',
+    label: 'DROPDOWN.DROPDOWN_LABEL',
     value: value,
     choices: ['1', '2', '3'],
     required: true,

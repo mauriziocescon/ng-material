@@ -1,12 +1,12 @@
 import { Route } from '@angular/router';
 
-import { InstanceDetail } from './ui/instance-detail';
+import { InstanceDetailPage } from './ui/page';
 
 export default [
   {
     path: '',
-    component: InstanceDetail,
+    component: InstanceDetailPage,
     title: 'Instance Detail',
-    canDeactivate: [(component: InstanceDetail) => component.canDeactivate],
+    canDeactivate: [(component: InstanceDetailPage) => component.canDeactivate],
   },
 ] satisfies Route[];

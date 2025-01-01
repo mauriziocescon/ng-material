@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
 
-import { InstanceListPage } from './ui/instance-list-page';
+import { InstanceListPage } from './ui/page';
 
 export default [
   {

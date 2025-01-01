@@ -12,7 +12,7 @@ import { BlockList } from './block-list/block-list';
 import { NextStep } from './next-step/next-step';
 
 @Component({
-  selector: 'app-instance-detail',
+  selector: 'app-instance-detail-page',
   imports: [
     Layout,
     BlockList,
@@ -32,7 +32,7 @@ import { NextStep } from './next-step/next-step';
 
     </app-instance-detail-layout>`,
 })
-export class InstanceDetail {
+export class InstanceDetailPage {
   private readonly route = inject(ActivatedRoute);
   private readonly instanceDetailStore = inject(InstanceDetailStore);
 

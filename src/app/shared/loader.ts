@@ -47,6 +47,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
         background-color: lightgrey;
         opacity: 0.1;
         content: '';
+        z-index: 5000;
       }
 
       .spinner {
@@ -72,8 +73,8 @@ import { TranslocoPipe } from '@jsverse/transloco';
           box-sizing: border-box;
           animation: rotation 1s linear infinite;
 
-          z-index: 1000;
           content: '';
+          z-index: 5000;
         }
       }
 

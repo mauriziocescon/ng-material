@@ -4,16 +4,18 @@
     "NAME": "Ng Material",
     "SELECT_LANGUAGE": "Select the language"
   },
+  "LOADER": {
+    "LOADING": "Loading...",
+    "LOAD_COMPLETED": "Loading completed",
+    "NO_RESULT": "Empty",
+    "RETRY": "Retry"
+  },
   "TEXT_FILTER": {
     "PLACEHOLDER": "Type some text"
   },
   "INSTANCE_LIST": {
     "ALERT_BUTTON": "Ok",
-    "ALERT_TITLE": "Alert",
-    "LOADING": "Loading...",
-    "LOAD_COMPLETED": "Loading completed",
-    "NO_RESULT": "Empty",
-    "RETRY": "Retry"
+    "ALERT_TITLE": "Alert"
   },
   "INSTANCE": {
     "SHOW": "Show"
@@ -30,11 +32,7 @@
   },
   "BLOCK_LIST": {
     "ALERT_BUTTON": "Ok",
-    "ALERT_TITLE": "Alert",
-    "LOADING": "Loading...",
-    "LOAD_COMPLETED": "Loading completed",
-    "NO_RESULT": "Empty",
-    "RETRY": "Retry"
+    "ALERT_TITLE": "Alert"
   },
   "CHECK_BOX": {
     "CHECK_BOX_DESC": "I have checked all documents",

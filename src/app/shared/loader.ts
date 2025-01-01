@@ -1,17 +1,37 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, computed, input, TemplateRef } from '@angular/core';
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  output,
+  TemplateRef,
+} from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-loader',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgTemplateOutlet,
+    TranslocoPipe,
   ],
   template: `
+    @if (showContent()) {
+      <ng-container [ngTemplateOutlet]="content()"/>
+    }
+
     @if (isLoading()) {
       <div class="spinner"></div>
-    }
-    <ng-container [ngTemplateOutlet]="content()"/>`,
+    } @else if (hasNoData()) {
+      <div class="full-width-message">{{ "LOADER.NO_RESULT" | transloco }}</div>
+    } @else if (shouldRetry()) {
+      <div class="full-width-message" (click)="reload.emit()">{{ "LOADER.RETRY" | transloco }}</div>
+    } @else if (isLoadCompleted()) {
+      <div class="full-width-message">{{ "LOADER.LOAD_COMPLETED" | transloco }}</div>
+    }`,
   styles: `
     :host.loader {
       display: block;
@@ -73,9 +93,14 @@ import { NgTemplateOutlet } from '@angular/common';
 export class Loader {
   readonly content = input.required<TemplateRef<unknown>>();
 
+  readonly showData = input(true, { transform: booleanAttribute });
   readonly isLoading = input.required({ transform: booleanAttribute });
   readonly hasNoData = input.required({ transform: booleanAttribute });
   readonly shouldRetry = input.required({ transform: booleanAttribute });
+  readonly isLoadCompleted = input(true, { transform: booleanAttribute });
 
+  readonly reload = output<void>();
+
+  protected readonly showContent = computed(() => this.showData() && this.content());
   protected readonly hostCssClasses = computed(() => this.isLoading() ? `loader` : ``);
 }

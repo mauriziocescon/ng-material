@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, untracked } from '@angular/core';
 
-import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { TranslocoService } from '@jsverse/transloco';
 
+import { Loader } from '../../../shared/loader';
 import { ScrollToTop } from '../../../shared/scroll-to-top';
 import { ModalAlert } from '../../../shared/modal';
 import { ModalManager } from '../../../shared/modal-manager';
@@ -13,28 +14,30 @@ import { BlockCompGenerator } from './blocks/block-comp-generator';
 @Component({
   selector: 'app-block-list',
   imports: [
-    TranslocoPipe,
-    BlockCompGenerator,
+    Loader,
     ScrollToTop,
+    BlockCompGenerator,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    @if (showData()) {
-      @for (block of blocks(); track block.id) {
-        <div class="generic-block">
-          <app-block-comp-generator [instanceId]="instanceId()" [block]="block"/>
-        </div>
-      }
-      <div class="full-width-message">{{ "BLOCK_LIST.LOAD_COMPLETED" | transloco }}</div>
-    }
+    <app-loader
+      [content]="content"
+      [showData]="showData()"
+      [isLoading]="isLoading()"
+      [hasNoData]="hasNoData()"
+      [shouldRetry]="shouldRetry()"
+      (reload)="reloadList()">
 
-    @if (isLoading()) {
-      <div class="full-width-message"> {{ "BLOCK_LIST.LOADING" | transloco }}</div>
-    } @else if (hasNoData()) {
-      <div class="full-width-message"> {{ "BLOCK_LIST.NO_RESULT" | transloco }}</div>
-    } @else if (shouldRetry()) {
-      <div class="full-width-message" (click)="reloadList()"> {{ "BLOCK_LIST.RETRY" | transloco }}</div>
-    }
+      <ng-template #content>
+        @for (block of blocks(); track block.id) {
+          <div class="generic-block">
+            <app-block-comp-generator [instanceId]="instanceId()" [block]="block"/>
+          </div>
+        }
+      </ng-template>
+      
+    </app-loader>
+
     <app-scroll-to-top/>`,
   styles: `
     .generic-block {

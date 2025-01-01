@@ -4,16 +4,18 @@
     "NAME": "Ng Material",
     "SELECT_LANGUAGE": "Sprache ӓndern"
   },
+  "LOADER": {
+    "LOADING": "Daten werden geladen",
+    "LOAD_COMPLETED": "Ladevorgang abgeschlossen",
+    "NO_RESULT": "Leer",
+    "RETRY": "Erneut versuchen"
+  },
   "TEXT_FILTER": {
     "PLACEHOLDER": "Text eingeben"
   },
   "INSTANCE_LIST": {
     "ALERT_BUTTON": "*** Ok ***",
-    "ALERT_TITLE": "*** Alert ***",
-    "LOADING": "Daten werden geladen",
-    "LOAD_COMPLETED": "Ladevorgang abgeschlossen",
-    "NO_RESULT": "Leer",
-    "RETRY": "Erneut versuchen"
+    "ALERT_TITLE": "*** Alert ***"
   },
   "INSTANCE": {
     "SHOW": "Show"
@@ -30,11 +32,7 @@
   },
   "BLOCK_LIST": {
     "ALERT_BUTTON": "*** Ok ***",
-    "ALERT_TITLE": "*** Alert ***",
-    "LOADING": "Daten werden geladen",
-    "LOAD_COMPLETED": "Ladevorgang abgeschlossen",
-    "NO_RESULT": "Leer",
-    "RETRY": "Erneut versuchen"
+    "ALERT_TITLE": "*** Alert ***"
   },
   "CHECK_BOX": {
     "CHECK_BOX_DESC": "*** I have checked all documents ***",

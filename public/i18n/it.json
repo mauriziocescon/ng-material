@@ -4,16 +4,18 @@
     "NAME": "Ng Material",
     "SELECT_LANGUAGE": "Cambia lingua"
   },
+  "LOADER": {
+    "LOADING": "Caricamento...",
+    "LOAD_COMPLETED": "Caricamento completato",
+    "NO_RESULT": "Vuoto",
+    "RETRY": "Riprova"
+  },
   "TEXT_FILTER": {
     "PLACEHOLDER": "Inserisci testo"
   },
   "INSTANCE_LIST": {
     "ALERT_BUTTON": "Ok",
-    "ALERT_TITLE": "Avviso",
-    "LOADING": "Caricamento...",
-    "LOAD_COMPLETED": "Caricamento completato",
-    "NO_RESULT": "Vuoto",
-    "RETRY": "Riprova"
+    "ALERT_TITLE": "Avviso"
   },
   "INSTANCE": {
     "SHOW": "Visualizza"
@@ -30,11 +32,7 @@
   },
   "BLOCK_LIST": {
     "ALERT_BUTTON": "Ok",
-    "ALERT_TITLE": "Avviso",
-    "LOADING": "Caricamento...",
-    "LOAD_COMPLETED": "Caricamento completato",
-    "NO_RESULT": "Vuoto",
-    "RETRY": "Riprova"
+    "ALERT_TITLE": "Avviso"
   },
   "CHECK_BOX": {
     "CHECK_BOX_DESC": "Ho visionato tutti i documenti",

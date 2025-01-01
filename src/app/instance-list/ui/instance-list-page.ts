@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, effect, inject, OnInit, untracked } from '@angular/core';
 
-import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { TranslocoService } from '@jsverse/transloco';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 
+import { Loader } from '../../shared/loader';
 import { TextFilter } from '../../shared/text-filter';
 import { ScrollToTop } from '../../shared/scroll-to-top';
 import { ModalManager } from '../../shared/modal-manager';
@@ -16,8 +17,8 @@ import { InstanceCard } from './instance-card';
 @Component({
   selector: 'app-instance-list-page',
   imports: [
-    TranslocoPipe,
     InfiniteScrollDirective,
+    Loader,
     TextFilter,
     ScrollToTop,
     InstanceCard,
@@ -35,21 +36,24 @@ import { InstanceCard } from './instance-card';
 
       <app-text-filter (valueDidChange)="textSearchDidChange($event)"/>
 
-      @for (instance of instanceListStore.instances(); track instance.id) {
-        <div class="instance">
-          <app-instance-card [instance]="instance"/>
-        </div>
-      }
+      <app-loader
+        [content]="content"
+        [isLoading]="instanceListStore.loading()"
+        [hasNoData]="instanceListStore.hasNoData()"
+        [shouldRetry]="instanceListStore.shouldRetry()"
+        [isLoadCompleted]="instanceListStore.isLoadCompleted()"
+        (reload)="loadList()">
 
-      @if (instanceListStore.loading()) {
-        <div class="full-width-message"> {{ "INSTANCE_LIST.LOADING" | transloco }}</div>
-      } @else if (instanceListStore.hasNoData()) {
-        <div class="full-width-message"> {{ "INSTANCE_LIST.NO_RESULT" | transloco }}</div>
-      } @else if (instanceListStore.isLoadCompleted()) {
-        <div class="full-width-message"> {{ "INSTANCE_LIST.LOAD_COMPLETED" | transloco }}</div>
-      } @else if (instanceListStore.shouldRetry()) {
-        <div class="full-width-message" (click)="loadList()"> {{ "INSTANCE_LIST.RETRY" | transloco }}</div>
-      }
+        <ng-template #content>
+          @for (instance of instanceListStore.instances(); track instance.id) {
+            <div class="instance">
+              <app-instance-card [instance]="instance"/>
+            </div>
+          }
+        </ng-template>
+        
+      </app-loader>
+
       <app-scroll-to-top/>
 
     </div>`,

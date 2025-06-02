@@ -30,8 +30,8 @@ export class InstanceDetailStore {
 
   private readonly params = signal<{ instanceId: string } | undefined>(undefined);
   private readonly blocksResource = rxResource({
-    request: this.params,
-    loader: ({ request }) => this.instanceDetail.getBlocks(request!.instanceId),
+    params: this.params,
+    stream: ({ params }) => this.instanceDetail.getBlocks(params!.instanceId),
     defaultValue: [],
   });
 

@@ -35,7 +35,7 @@ import { BlockCompGenerator } from './blocks/block-comp-generator';
           </div>
         }
       </ng-template>
-      
+
     </app-loader>
 
     <app-scroll-to-top/>`,
@@ -76,7 +76,7 @@ export class BlockList {
       const modalAlert: ModalAlert = {
         id: 'blockListError',
         title: this.transloco.translate('BLOCK_LIST.ALERT_TITLE'),
-        message: this.error() as string,
+        message: this.error()?.message as string,
         buttonLabel: this.transloco.translate('BLOCK_LIST.ALERT_BUTTON'),
       };
       this.modalManager.alert(modalAlert);

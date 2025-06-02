@@ -1,7 +1,6 @@
 import { ApplicationConfig, inject, isDevMode, LOCALE_ID, provideZonelessChangeDetection } from '@angular/core';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 import { provideTransloco } from '@jsverse/transloco';
 
@@ -15,7 +14,6 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideHttpClient(withFetch()),
     provideRouter(routes),
-    provideAnimationsAsync(),
     provideTransloco({
       config: {
         prodMode: !isDevMode(),

@@ -8,7 +8,7 @@ export class Api {
 }
 
 export class Application {
-  APP_NAME = 'ngrx-app';
+  APP_NAME = 'ng-material';
   SHOW_JSON_SERVER_API = !environment.production;
   JSON_SERVER_API_URL = environment.apiUrl;
 }

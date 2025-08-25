@@ -58,11 +58,10 @@ export class InstanceDetailStore {
         .pipe(
           tapResponse({
             next: data => {
-              patchState(this.state, { syncParams: { instanceId: undefined } });
+              patchState(this.state, { syncParams: { instanceId: undefined }, syncOngoing: false });
               this.editedBlocks.set(data);
             },
-            error: (err: string) => patchState(this.state, { syncError: err }),
-            finalize: () => patchState(this.state, { syncOngoing: false }),
+            error: (err: string) => patchState(this.state, { syncOngoing: false, syncError: err }),
           }),
         ),
       ),

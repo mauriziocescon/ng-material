@@ -62,10 +62,10 @@ export class InstanceListStore {
           tapResponse({
             next: data => patchState(this.state, {
               instances: [...this.state.instances(), ...data.instances],
+              loading: false,
               lastPage: data.lastPage,
             }),
-            error: (err: string) => patchState(this.state, ({ error: err })),
-            finalize: () => patchState(this.state, { loading: false }),
+            error: (err: string) => patchState(this.state, ({ loading: false, error: err })),
           }),
         ),
       ),

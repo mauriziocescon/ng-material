@@ -1,7 +1,7 @@
 import express from 'express';
 
 import {getDb} from '../lowdb.js';
-import {validate} from './utils/blocks-validation.js';
+import {validate} from '../utils/validation.js';
 
 export const router = express.Router();
 

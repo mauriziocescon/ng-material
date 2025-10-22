@@ -1,6 +1,6 @@
-const faker = require('faker');
+import faker from 'faker';
 
-exports.getUnknownComponent = (index) => ({
+export const getUnknownComponent = (index) => ({
   id: faker.datatype.uuid(),
   type: 'unknown',
   order: parseInt(index),

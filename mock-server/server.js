@@ -1,17 +1,20 @@
-const path = require('path');
-const isProduction = process.env.NODE_ENV === 'production';
-const jsonServer = require('json-server');
-const cors = require('cors');
-const app = jsonServer.create();
-const router = require('./lowdb').getRouter();
-const middlewares = jsonServer.defaults(isProduction ? {static: './dist/ng-material/browser'} : {});
+import path from 'path';
+import cors from 'cors';
+import jsonServer from 'json-server';
+import {getRouter} from './lowdb.js';
 
-const delayMiddleware = require('./middlewares/delay');
-const errosMiddleware = require('./middlewares/errors');
+import {delay} from './middlewares/delay.js';
+import {error} from './middlewares/errors.js';
 
 // routes
-const blocks = require('./routes/blocks');
-const instances = require('./routes/instances');
+import * as blocks from './routes/blocks.js';
+import * as instances from './routes/instances.js';
+
+const isProduction = process.env.NODE_ENV === 'production';
+
+const app = jsonServer.create();
+const router = getRouter();
+const middlewares = jsonServer.defaults(isProduction ? {static: './dist/ng-material/browser'} : {});
 
 // set the port of our application
 // process.env.PORT lets the port to be set by Heroku
@@ -19,8 +22,8 @@ const port = process.env.PORT || 3000;
 
 // Middlewares
 app.use(middlewares);
-app.use(delayMiddleware.delay);
-app.use(errosMiddleware.error);
+app.use(delay);
+app.use(error);
 
 // To handle POST, PUT and PATCH you need to use a body-parser
 app.use(jsonServer.bodyParser);

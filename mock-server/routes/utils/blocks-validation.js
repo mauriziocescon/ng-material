@@ -27,7 +27,7 @@ const isTextInputBlockValid = (textInputBlock) => {
   return true;
 };
 
-exports.validate = (blocks) => {
+export const validate = (blocks) => {
   blocks.forEach((block) => {
     switch (block.type) {
       case 'check-box': {

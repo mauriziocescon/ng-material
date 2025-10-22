@@ -1,6 +1,6 @@
-const faker = require('faker');
+import faker from 'faker';
 
-exports.getDropdown = (index) => {
+export const getDropdown = (index) => {
   const value = faker.datatype.boolean() ? '1' : undefined;
 
   return {

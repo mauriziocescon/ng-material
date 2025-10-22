@@ -1,9 +1,11 @@
-const router = require('express').Router();
+import express from 'express';
 
-const lowdb = require('../lowdb');
+import {getDb} from '../lowdb.js';
+
+export const router = express.Router();
 
 router.get('/instances', (req, res) => {
-  const db = lowdb.getDb();
+  const db = getDb();
   const textSearch = req.query.q;
   const start = parseInt(req.query._start) || 0;
   const limit = parseInt(req.query._limit) || 20;
@@ -22,5 +24,3 @@ router.get('/instances', (req, res) => {
 
   return res.status(200).jsonp(instances);
 });
-
-exports.router = router;

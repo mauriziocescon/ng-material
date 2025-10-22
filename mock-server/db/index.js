@@ -1,14 +1,13 @@
-const faker = require('faker');
+import faker from 'faker';
 
-const unknown = require('./unknown');
-const checkBox = require('./check-box');
-const checkBoxConfirmer = require('./check-box-confirmer');
-const datePicker = require('./date-picker');
-const dropdown = require('./dropdown');
-const textInput = require('./text-input');
+import {getUnknownComponent} from './unknown.js';
+import {getCheckBox} from './check-box.js';
+import {getCheckBoxConfirmer} from './check-box-confirmer.js';
+import {getDatePicker} from './date-picker.js';
+import {getDropdown} from './dropdown.js';
+import {getTextInput} from './text-input.js';
 
-// db creation
-const mocks = {
+export const mocks = {
   instances: [],
 };
 
@@ -16,17 +15,17 @@ const getRandomBlock = (index) => {
   const choice = Math.random();
 
   if (choice < 0.05) {
-    return unknown.getUnknownComponent(index);
+    return getUnknownComponent(index);
   } else if (choice < 0.20) {
-    return checkBox.getCheckBox(index);
+    return getCheckBox(index);
   } else if (choice < 0.40) {
-    return checkBoxConfirmer.getCheckBoxConfirmer(index);
+    return getCheckBoxConfirmer(index);
   } else if (choice < 0.60) {
-    return datePicker.getDatePicker(index);
+    return getDatePicker(index);
   } else if (choice < 0.80) {
-    return dropdown.getDropdown(index);
+    return getDropdown(index);
   } else {
-    return textInput.getTextInput(index);
+    return getTextInput(index);
   }
 };
 
@@ -40,5 +39,3 @@ Array.from({length: 160}, (v1, i) => {
 
   mocks.instances.push(instance);
 });
-
-exports.mocks = mocks;

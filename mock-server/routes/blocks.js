@@ -1,10 +1,12 @@
-const router = require('express').Router();
+import express from 'express';
 
-const lowdb = require('../lowdb');
-const blocksValidation = require('./utils/blocks-validation');
+import {getDb} from '../lowdb.js';
+import {validate} from './utils/blocks-validation.js';
+
+export const router = express.Router();
 
 router.get('/blocks', (req, res) => {
-  const db = lowdb.getDb();
+  const db = getDb();
   const instanceId = req.query.instanceId;
 
   const foundInstance = db.get('instances')
@@ -21,7 +23,7 @@ router.get('/blocks', (req, res) => {
 });
 
 router.put('/blocks', (req, res) => {
-  const db = lowdb.getDb();
+  const db = getDb();
   const instanceId = req.body.instanceId;
   const newBlocks = req.body.blocks;
 
@@ -40,7 +42,7 @@ router.put('/blocks', (req, res) => {
       return b1.order - b2.order;
     });
 
-    blocks = blocksValidation.validate(blocks);
+    blocks = validate(blocks);
 
     db.get('instances')
       .find({id: instanceId})
@@ -54,5 +56,3 @@ router.put('/blocks', (req, res) => {
     });
   }
 });
-
-exports.router = router;

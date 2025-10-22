@@ -1,6 +1,6 @@
-const faker = require('faker');
+import faker from 'faker';
 
-exports.getTextInput = (index) => {
+export const getTextInput = (index) => {
   const value = faker.datatype.boolean() ? faker.lorem.words(faker.datatype.number(5)) : undefined;
   const minLength = faker.datatype.boolean() ? faker.datatype.number(5) : undefined;
   const maxLength = faker.datatype.boolean() ? faker.datatype.number({min: 5, max: 10}) : undefined;

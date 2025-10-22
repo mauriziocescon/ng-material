@@ -1,6 +1,6 @@
-const faker = require('faker');
+import faker from 'faker';
 
-exports.getCheckBox = (index) => {
+export const getCheckBox = (index) => {
   const value = faker.datatype.boolean() ? true : undefined;
 
   return {

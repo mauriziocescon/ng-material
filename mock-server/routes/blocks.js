@@ -1,7 +1,9 @@
-const lowdb = require('../lowdb');
-const blocksValidation = require('../utils/blocks-validation');
+const router = require('express').Router();
 
-exports.getBlocks = (req, res) => {
+const lowdb = require('../lowdb');
+const blocksValidation = require('./utils/blocks-validation');
+
+router.get('/blocks', (req, res) => {
   const db = lowdb.getDb();
   const instanceId = req.query.instanceId;
 
@@ -16,9 +18,9 @@ exports.getBlocks = (req, res) => {
       error: 'Bad Request',
     });
   }
-};
+});
 
-exports.saveBlocks = (req, res) => {
+router.put('/blocks', (req, res) => {
   const db = lowdb.getDb();
   const instanceId = req.body.instanceId;
   const newBlocks = req.body.blocks;
@@ -51,4 +53,6 @@ exports.saveBlocks = (req, res) => {
       error: 'Bad Request',
     });
   }
-};
+});
+
+exports.router = router;

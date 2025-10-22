@@ -3,14 +3,15 @@ const isProduction = process.env.NODE_ENV === 'production';
 const jsonServer = require('json-server');
 const cors = require('cors');
 const app = jsonServer.create();
-const router = require('./lowdb').getRouter();
+const router = require('express').Router();
 const middlewares = jsonServer.defaults(isProduction ? {static: './dist/ng-material/browser'} : {});
 
 const delayMiddleware = require('./middlewares/delay');
 const errosMiddleware = require('./middlewares/errors');
 
-const blocks = require('./controllers/blocks');
-const instances = require('./controllers/instances');
+// routes
+const blocks = require('./routes/blocks');
+const instances = require('./routes/instances');
 
 // set the port of our application
 // process.env.PORT lets the port to be set by Heroku
@@ -27,12 +28,12 @@ app.use(jsonServer.bodyParser);
 // Expose relevant headers
 app.use(cors({exposedHeaders: ['X-Total-Count']}));
 
-app.get(`${isProduction ? '/api' : ''}/instances`, instances.getInstances);
-app.get(`${isProduction ? '/api' : ''}/blocks`, blocks.getBlocks);
-app.put(`${isProduction ? '/api' : ''}/blocks`, blocks.saveBlocks);
+// Mount routes
+app.use(`${isProduction ? '/api' : '/'}`, instances.router);
+app.use(`${isProduction ? '/api' : '/'}`, blocks.router);
 
-// Mount the router based on lowdb.js
-app.use(isProduction ? '/api' : '/', router);
+// Mount lowdb
+app.use(`${isProduction ? '/api' : '/'}`, router);
 
 // Fallback on frontend routes
 app.get('*', (req, res, next) => {

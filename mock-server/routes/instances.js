@@ -1,6 +1,8 @@
+const router = require('express').Router();
+
 const lowdb = require('../lowdb');
 
-exports.getInstances = (req, res) => {
+router.get('/instances', (req, res) => {
   const db = lowdb.getDb();
   const textSearch = req.query.q;
   const start = parseInt(req.query._start) || 0;
@@ -19,4 +21,6 @@ exports.getInstances = (req, res) => {
   res.setHeader('X-Total-Count', db.get('instances').value().length);
 
   return res.status(200).jsonp(instances);
-};
+});
+
+exports.router = router;

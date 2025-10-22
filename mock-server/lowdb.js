@@ -9,7 +9,3 @@ const router = jsonServer.router(mocks);
 exports.getDb = () => {
   return router.db;
 };
-
-exports.getRouter = () => {
-  return router;
-};

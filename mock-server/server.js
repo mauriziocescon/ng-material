@@ -3,7 +3,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const jsonServer = require('json-server');
 const cors = require('cors');
 const app = jsonServer.create();
-const router = require('express').Router();
+const router = require('./lowdb').getRouter();
 const middlewares = jsonServer.defaults(isProduction ? {static: './dist/ng-material/browser'} : {});
 
 const delayMiddleware = require('./middlewares/delay');
@@ -31,8 +31,6 @@ app.use(cors({exposedHeaders: ['X-Total-Count']}));
 // Mount routes
 app.use(`${isProduction ? '/api' : '/'}`, instances.router);
 app.use(`${isProduction ? '/api' : '/'}`, blocks.router);
-
-// Mount lowdb
 app.use(`${isProduction ? '/api' : '/'}`, router);
 
 // Fallback on frontend routes

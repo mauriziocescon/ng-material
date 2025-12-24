@@ -17,7 +17,7 @@ import { Unknown } from './unknown/unknown';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ng-container [ngComponentOutlet]="component()" [ngComponentOutletInputs]="inputs()"/>`,
+    <ng-container [ngComponentOutlet]="$any(component())" [ngComponentOutletInputs]="inputs()" />`,
 })
 export class BlockCompGenerator {
   readonly instanceId = input.required<string>();
